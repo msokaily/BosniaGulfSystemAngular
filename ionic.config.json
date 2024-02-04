@@ -1,0 +1,7 @@
+{
+  "name": "BosniaGulfSystem",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
+}
