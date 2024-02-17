@@ -1,0 +1,86 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <!-- <ion-back-button defaultHref="user-address"></ion-back-button> -->
+      <!-- <ion-back-button></ion-back-button> -->
+      <ion-button (click)="back()">
+        <ion-icon slot="icon-only" name="chevron-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="name_pr">{{ "choose-time.title" | translate }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-no-border ion-padding">
+  <div class="ion-padding-bottom">
+    <ion-list lines="none" class="delivery-type" [hidden]="!order?.store?.asap">
+      <ion-item mode="ios" *ngIf="order?.store?.asap">
+        <ion-label>{{"choose-time.ASAP" | translate}}</ion-label>
+        <ion-checkbox #asapCheckbox slot="start" color="success" (ionChange)="deliveryTypeChanged($event)"
+          [checked]="form.deliveryType === 'immediateDelivery'" [value]="'immediateDelivery'"></ion-checkbox>
+      </ion-item>
+      <ion-item mode="ios" *ngIf="order?.store?.schedule">
+        <ion-label>{{"choose-time.Schedule" | translate}}</ion-label>
+        <ion-checkbox #scheduleCheckbox slot="start" color="success" (ionChange)="deliveryTypeChanged($event)"
+          [checked]="form.deliveryType === 'scheduleDelivery'" [value]="'scheduleDelivery'"></ion-checkbox>
+      </ion-item>
+    </ion-list>
+  </div>
+  <div class="ion-padding-bottom ion-padding-top"
+    *ngIf="order?.store?.schedule && form.deliveryType === 'scheduleDelivery'">
+    <div class="h3 ion-margin-bottom nwhd">{{"choose-time.day" | translate}}</div>
+    <ion-segment class="days-segment" [value]="dayIndex" [scrollable]="true" (ionChange)="dayChanged($event)">
+      <ion-segment-button *ngFor="let day of days; let index = index;" [value]="index">
+        <ion-icon
+          *ngIf="form.day === day"
+          color="success"
+          name="checkmark-circle"></ion-icon>
+        <ion-label>
+          <div class="h2 day-number">{{day.day}}</div>
+          <div class="day-name">{{day.dayName}}</div>
+        </ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+  <div class="ion-padding-bottom ion-padding-top"
+    *ngIf="order?.store?.schedule && form.deliveryType === 'scheduleDelivery'">
+    <div class="h3 ion-margin-bottom nwhd">{{"choose-time.time" | translate}}</div>
+    <ion-row style="align-items: center;">
+      <ion-col size="1.5" *ngIf="lang === 'ar'">
+        <ion-icon
+          color="success"
+          style="font-size: 30px;"
+          name="checkmark-circle"></ion-icon>
+      </ion-col>
+      <ion-col size="4.5">
+        <app-time-select (timeChange)="timeFromChanged($event)" name="FromTime" [day]="form.day" [time]="form.fromTime"
+          [openTimes]="openTimes" [shift]="{
+            start: 0,
+            end: 1
+          }" [interval]="{
+            hour: order?.store?.scheduleTimeDifference?.hours,
+            minute: order?.store?.scheduleTimeDifference?.minutes
+          }"></app-time-select>
+      </ion-col>
+      <ion-col class="newstle" [class.ion-text-end]="lang !== 'ar'">{{ "common.to" | translate }}</ion-col>
+      <ion-col size="5">
+        <app-time-select (timeChange)="timeToChanged($event)" [enabled]="false" name="ToTime"
+          [selectedTime]="selectedToTime" [day]="form.day" [time]="form.toTime" [interval]="{
+            hour: order?.store?.scheduleTimeDifference?.hours,
+            minute: order?.store?.scheduleTimeDifference?.minutes
+          }" [openTimes]="openTimes"></app-time-select>
+      </ion-col>
+      <ion-col size="1" *ngIf="lang === 'en'">
+        <ion-icon
+          color="success"
+          style="font-size: 30px;"
+          name="checkmark-circle"></ion-icon>
+      </ion-col>
+    </ion-row>
+  </div>
+</ion-content>
+<div slot="fixed" class="ion-padding submit-btn">
+  <ion-button (click)="submit()" size="large" class="custom-button" expand="block">
+    {{ "common.continue" | translate }}
+  </ion-button>
+</div>

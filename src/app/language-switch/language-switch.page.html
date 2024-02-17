@@ -1,0 +1,13 @@
+<div class="lang-switch-container">
+  <!-- <ion-icon slot="start" name="chevron-down-outline" (click)="openLangSelect($event)"></ion-icon> -->
+  <div (click)="openLangSelect($event)">
+    <ion-item lines="none">
+      <ion-select #langSelect [value]="lang" interface="popover" [interfaceOptions]="{
+        cssClass: 'lang-switch-popover'
+      }" (ionChange)="onLangChanged($event)">
+        <ion-select-option value="en">English</ion-select-option>
+        <ion-select-option value="ar" class="ar-text-label">العربية</ion-select-option>
+      </ion-select>
+    </ion-item>
+  </div>
+</div>

@@ -1,0 +1,119 @@
+{
+  "AppName": "نظام البوسنة بعيون خليجية",
+  "common": {
+    "language": "اللغة",
+    "note": "ملاحظة",
+    "confirm_msg": "هل أنت متأكد ؟",
+    "timeout": "خطأ في الخادم, من فضلك حاول مرة أخرى!",
+    "from": "من",
+    "to": "إلى",
+    "date": "التاريخ",
+    "amount": "المبلغ",
+    "empty_wallet": "محفظة فارغة",
+    "confirm_close_app": "هل أنت متأكد من إغلاق WATCARD ؟",
+    "load_more": "تحميل المزيد",
+    "done": "تم",
+    "ok": "حسنا",
+    "yes": "نعم",
+    "no": "لا",
+    "clear": "تفريخ",
+    "confirm": "تأكيد",
+    "error": "خطأ",
+    "alert": "تنبيه",
+    "select": "إختر",
+    "cancel": "إلغاء",
+    "close": "إغلاق",
+    "send": "إرسال",
+    "submit": "إرسال",
+    "email": "البريد الإلكتروني",
+    "phone": "رقم الهاتف",
+    "password": "كلمة المرور",
+    "loading": "تحميل",
+    "newest": "Newest",
+    "oldest": "Oldest",
+    "loadmore": "Loading more",
+    "card_connected": "تم ربط البطاقة",
+    "success": "نجح",
+    "loggingout": "تسجيل الخروج",
+    "success_verification": "تم تأكيد الهوية بنجاح",
+    "confirmation": "تأكيد",
+    "logout-confirm": "هل أنت متأكد أنك تريد الخروج؟",
+    "logout-success": "تم تسجيل الخروج بنجاح",
+    "confirm-message": "هل أنت متأكد؟",
+    "remove-success": "تم الحذف بنجاح!",
+    "errors": {
+      "server": "خطأ في السيرفر, من فضلك حاول مرة أخرى",
+      "required_values": "من فضلك أدخل جميع الحقول المطلوبة",
+      "notif_error": "خطأ في إرسال الإشعار, من فضلك حاول مرة أخرى",
+      "select_employee": "من فضلك اختر الموظف",
+      "notif_empty_tokens": "تعذر إرسال إشعار التحقق، هذا المستخدم ليس لديه تطبيق WATCARD!"
+    }
+  },
+
+  "page404": {
+    "title": "خطأ",
+    "content": "لم يتم العثور على الصفحة المطلوبة!"
+  },
+  
+  "home": "الرئيسية",
+
+  "login.title": "تسجيل الدخول",
+  "login.invalidEmail": "من فضلك ادخل بريد الكتروني صحيح!",
+  "login.email": "البريد الإلكتروني",
+  "login.password": "كلمة المرور",
+  "login.login": "دخول",
+
+  "confirm": "تأكيد",
+  "incorrect_code": "لقد قمت بإدخال رمز خاطئ",
+
+  "server_error": "لا يمكن الإتصال بالخادم, تأكد من إتصالك بالإنترنت!",
+  "incorrect_login": "بيانات الدخول غير صحيحة!",
+
+  "cars": "المركبات",
+
+  "orders": "الطلبات",
+  "logout": "تسجيل الخروج",
+  "language": "اللغة",
+  "empty_data": "لا يوجد بيانات بعد!",
+
+  "company": "الشركة",
+  "model": "الموديل",
+  "no.": "الرقم",
+  "name": "الإسم",
+  "register_no": "رقم التسجيل",
+  "register_start": "بداية التسجيل",
+  "register_end": "نهاية التسجيل",
+  "updated_at": "تاريخ آخر تعديل",
+  "image": "الصورة",
+  "actions": "العمليات",
+  "cost": "التكلفة",
+  "price": "السعر",
+
+  "filter": "بحث وتصفية",
+  "search": "بحث",
+  "select": "إختر",
+  "edit": "تعديل",
+  "save": "حفظ",
+  "add": "إضافة",
+  "select_date": "إختر التاريخ",
+  "email": "البريد الإلكتروني",
+  "role": "نوع المستخدم",
+
+  "users": "المستخدمين",
+  "user_type": "نوع المستخدم",
+
+  "admin": "مدير عام",
+  "reserver": "مدير طلبات",
+  "accountant": "محاسب",
+  "monitor": "مراقب",
+
+  "leave-empty-no-change": "أبقه فارغاً حتى لا يتم تعديلها",
+  "invalid_values": "من فضلك أدخل بيانات صحيحة!",
+
+  "partners": "الشركاء",
+  "type": "النوع",
+  "contact_name": "إسم التواصل",
+  "phone": "رقم الهاتف",
+  "accommodations": "السكن"
+
+}

@@ -1,0 +1,19 @@
+.page-title {
+  padding-bottom: 10px;
+  width: fit-content;
+  margin: auto;
+  text-align: center;
+
+  .border {
+    height: 5px;
+    background-color: var(--ion-color-warning);
+    width: 70%;
+    margin: 10px auto;
+  }
+}
+
+form {
+  max-width: 450px;
+  width: 100%;
+  margin-inline: auto;
+}

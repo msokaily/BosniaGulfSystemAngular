@@ -1,0 +1,66 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ title || ("filter" | translate) }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()" title="click close">
+        <ion-icon slot="icon-only" name="close-circle-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div *ngFor="let filter of filters; let index=index;">
+    <div class="custom-input" *ngIf="filter.type === 'text'">
+      <ion-item lines="none">
+        <ion-input type="text" [label]="filter.title" labelPlacement="floating" [(ngModel)]="filter.value"></ion-input>
+      </ion-item>
+    </div>
+    <div class="custom-input" *ngIf="filter.type === 'date'">
+      <ion-item lines="none">
+        <ion-label class="custom-label">{{filter.title}}</ion-label>
+        <ion-datetime-button [datetime]="filter.name">
+          <div slot="date-target">{{ filter?.value === undefined ? ('select_date' | translate) : filter?.value | date: 'YYYY-MM-dd' }}</div>
+        </ion-datetime-button>
+        <ion-modal [keepContentsMounted]="true">
+          <ng-template>
+            <ion-datetime [id]="filter.name" [(ngModel)]="filter.value" [doneText]="'common.ok' | translate"
+              [cancelText]="'common.cancel' | translate"
+              [presentation]="'date'"
+              [showDefaultButtons]="true"
+              [showDefaultTitle]="true"
+              [required]="filter?.required ?? false"
+              [max]="3000-12-30"
+              [showClearButton]="true"
+              [clearText]="'common.clear' | translate"></ion-datetime>
+          </ng-template>
+        </ion-modal>
+      </ion-item>
+    </div>
+    <div class="custom-input" *ngIf="filter.type === 'select' && filter?.options">
+      <ion-item lines="none">
+        <ion-select [label]="filter.title" labelPlacement="fixed" [(ngModel)]="filter.value"
+          [multiple]="filter?.multiple" [placeholder]="('select' | translate) + ' ' +filter.title"
+          [interface]="filter?.multiple ? 'alert' : 'popover'"
+          [okText]="'common.select' | translate" [cancelText]="'common.cancel' | translate">
+          <ion-select-option *ngFor="let opt of filter?.options" [value]="opt?.id">{{ opt?.name }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="submit()" title="click to submit filter">
+        <ion-icon slot="icon-only" name="checkmark-circle-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button (click)="clear()" title="click to reset filter">
+        <ion-icon slot="icon-only" name="refresh"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

@@ -2,25 +2,90 @@
   <ion-split-pane contentId="main-content">
     <ion-menu contentId="main-content" type="overlay">
       <ion-content>
+        <div class="avatar ion-text-center">
+          <img src="assets/imgs/logo-bosna.png" height="100px" />
+        </div>
         <ion-list id="inbox-list">
-          <ion-list-header>Inbox</ion-list-header>
-          <ion-note>hi&#64;ionicframework.com</ion-note>
-
-          <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages; let i = index">
-            <ion-item routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
-              <ion-icon aria-hidden="true" slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
-              <ion-label>{{ p.title }}</ion-label>
+          <ion-list-header>{{ "AppName" | translate }}</ion-list-header>
+          <div class="ion-padding-start ion-padding-end">
+            <div *ngIf="user">
+              {{user?.name}} ({{ user?.role }})
+            </div>
+            <div>
+              {{ 'language' | translate }}: <app-language-switch dir="ltr" style="width: 200px; margin: auto; display: inline-block;"></app-language-switch>
+            </div>
+          </div>
+          <ion-menu-toggle auto-hide="false">
+            <ion-item
+              routerDirection="root"
+              [routerLink]="'home'"
+              lines="none"
+              detail="false"
+              routerLinkActive="selected"
+              class="ion-margin-top">
+              <ion-icon
+                aria-hidden="true"
+                slot="start"
+                name="list"></ion-icon>
+              <ion-label>{{ "orders" | translate }}</ion-label>
             </ion-item>
           </ion-menu-toggle>
-        </ion-list>
-
-        <ion-list id="labels-list">
-          <ion-list-header>Labels</ion-list-header>
-
-          <ion-item *ngFor="let label of labels" lines="none">
-            <ion-icon aria-hidden="true" slot="start" ios="bookmark-outline" md="bookmark-sharp"></ion-icon>
-            <ion-label>{{ label }}</ion-label>
-          </ion-item>
+          <ion-menu-toggle auto-hide="false">
+            <ion-item
+              routerDirection="root"
+              [routerLink]="'cars'"
+              lines="none"
+              detail="false"
+              routerLinkActive="selected">
+              <ion-icon
+                aria-hidden="true"
+                slot="start"
+                name="car-sport-outline"></ion-icon>
+              <ion-label>{{ "cars" | translate }}</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+          <ion-menu-toggle auto-hide="false">
+            <ion-item
+              routerDirection="root"
+              [routerLink]="'partners'"
+              lines="none"
+              detail="false"
+              routerLinkActive="selected">
+              <ion-icon
+                aria-hidden="true"
+                slot="start"
+                name="business-outline"></ion-icon>
+              <ion-label>{{ "partners" | translate }}</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+          <ion-menu-toggle auto-hide="false">
+            <ion-item
+              routerDirection="root"
+              [routerLink]="'users'"
+              lines="none"
+              detail="false"
+              routerLinkActive="selected">
+              <ion-icon
+                aria-hidden="true"
+                slot="start"
+                name="people-outline"></ion-icon>
+              <ion-label>{{ "users" | translate }}</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+          <ion-menu-toggle auto-hide="false">
+            <ion-item
+              lines="none"
+              detail="false"
+              style="cursor: pointer; margin-top: 20px; border-top: 1px solid #e0e0e0;"
+              (click)="logout()"
+              routerLinkActive="selected">
+              <ion-icon
+                aria-hidden="true"
+                slot="start"
+                name="log-out-outline"></ion-icon>
+              <ion-label>{{ "logout" | translate }}</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
         </ion-list>
       </ion-content>
     </ion-menu>

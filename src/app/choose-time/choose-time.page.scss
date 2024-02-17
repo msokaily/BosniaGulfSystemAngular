@@ -1,0 +1,112 @@
+ion-segment {
+  ion-segment-button {
+    --border-radius: 16px;
+    --border-width: 1px;
+    --border-color: #C9E0FF;
+    --border-style: dashed;
+    --padding-start: 5px;
+    --padding-end: 5px;
+    --padding-top: 5px;
+    --color: var(--ion-color-primary);
+    min-width: 90px;
+    min-height: 95px;
+    margin-inline-end: 10px;
+    --indicator-height: 0;
+    --background-checked: var(--ion-color-primary);
+    --color-checked: var(--ion-color-light);
+    text-transform: none;
+
+    ion-icon {
+      position: absolute;
+      top: -5px;
+      right: -4px;
+      margin-top: 0;
+      font-size: 27px;
+    }
+
+    ion-icon::before {
+      content: "";
+      background: #FFF;
+      width: 16px;
+      height: 16px;
+      position: absolute;
+      z-index: -1;
+      border-radius: 50px;
+      left: 6px;
+      top: 6px;
+    }
+
+    .day-name {
+      margin-top: 3px;
+      color: rgba(37, 37, 37, 0.6);
+      font-size: 12px;
+    }
+
+    .day-number {
+      font-family: 'Rubik', sans-serif !important;
+      font-size: 30px !important;
+      font-weight: 400;
+      margin-top: 7px;
+      margin-bottom: 0px !important;
+      text-align: center;
+    }
+  }
+
+  ion-segment-button.segment-button-checked {
+    .day-name {
+      color: white;
+    }
+  }
+
+  ion-segment-button.selected {
+    --border-radius: 14px;
+    --border-width: 1px;
+    --border-color: #C9E0FF !important;
+    --border-style: solid !important;
+  }
+}
+
+.delivery-type {
+  display: flex;
+  justify-content: flex-start;
+
+  ion-item {
+    border: 1px dashed #C9E0FF;
+    border-radius: 14px;
+    --border-radius: 14px;
+    margin-top: 10px;
+    width: fit-content;
+    margin-right: 10px;
+    ion-label {
+      font-size: 100%;
+      white-space: nowrap;
+    }
+    ion-checkbox {
+      margin-inline-end: 5px;
+    }
+  }
+}
+
+.submit-btn {
+  background: var(--ion-color-light);
+}
+
+.checkbox-icon path {
+  stroke-width: 2 !important;
+}
+
+.newstle {
+  text-align: start;
+  padding-right: 0px;
+}
+
+.days-segment {
+  margin-left: 5px;
+}
+
+.nwhd {
+  color:
+    rgba(37, 37, 37, 1);
+  font-size: 16px;
+  font-weight: 400 !important;
+}

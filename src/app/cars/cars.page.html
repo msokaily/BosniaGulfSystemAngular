@@ -1,0 +1,66 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      <ion-icon name="car-sport-outline" size="large" class="header-title-icon"></ion-icon>
+      {{"cars" | translate}}
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="openFilter()">
+        <ion-icon slot="icon-only" name="options"></ion-icon>
+      </ion-button>
+      <ion-button (click)="add()">
+        <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-spinner *ngIf="loadingIndicator" class="loading-spinner"></ion-spinner>
+  <ngx-datatable
+    class="bootstrap fullscreen"
+    [columnMode]="ColumnMode.force"
+    [headerHeight]="50"
+    [footerHeight]="0"
+    [rowHeight]="'auto'"
+    [scrollbarV]="false"
+    [scrollbarH]="true"
+    [rows]="items"
+    [messages]="{ emptyMessage: '<h1 class=ion-text-center>'+('empty_data' | translate)+'</h1>' }"
+    [loadingIndicator]="loadingIndicator">
+    <ngx-datatable-column [name]="'actions' | translate" [sortable]="false" [width]="90">
+      <ng-template let-rowIndex="rowIndex" ngx-datatable-cell-template>
+        <ion-button (click)="edit(rowIndex)" size="small" class="square-btn" color="dark" fill="outline">
+          <ion-icon slot="icon-only" name="create"></ion-icon>
+        </ion-button>
+        <ion-button (click)="remove(rowIndex)" size="small" class="square-btn" color="danger" fill="outline">
+          <ion-icon slot="icon-only" name="trash"></ion-icon>
+        </ion-button>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column [name]="'no.' | translate" [width]="40" [sortable]="false"><ng-template let-rowIndex="rowIndex" ngx-datatable-cell-template>{{rowIndex + 1}}</ng-template></ngx-datatable-column>
+    <ngx-datatable-column [name]="'image' | translate" prop="image" [sortable]="false" [width]="60">
+      <ng-template ngx-datatable-cell-template let-value="value">
+        <ion-img [src]="value" style="width: 40px;"></ion-img>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column [name]="'name' | translate" prop="name"></ngx-datatable-column>
+    <ngx-datatable-column [name]="'cost' | translate" prop="cost" [width]="70"></ngx-datatable-column>
+    <ngx-datatable-column [name]="'price' | translate" prop="price" [width]="70">
+      <ng-template ngx-datatable-cell-template let-value="value">
+        <div class="ion-text-start">
+          <span dir="ltr">{{ value | mcurrency }}</span>
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column [name]="'model' | translate" prop="model" [width]="100"></ngx-datatable-column>
+    <ngx-datatable-column [name]="'company' | translate" prop="company.name" [width]="100"></ngx-datatable-column>
+    <ngx-datatable-column [name]="'register_no' | translate" prop="register_no" [width]="100"></ngx-datatable-column>
+    <ngx-datatable-column [name]="'register_start' | translate" prop="register_start" [width]="100"></ngx-datatable-column>
+    <ngx-datatable-column [name]="'register_end' | translate" prop="register_end" [width]="100"></ngx-datatable-column>
+    <ngx-datatable-column [name]="'updated_at' | translate" prop="updated_at" [width]="100" class="ion-text-start" dir="ltr"></ngx-datatable-column>
+  </ngx-datatable>
+</ion-content>

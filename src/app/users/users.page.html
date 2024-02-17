@@ -1,0 +1,48 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      <ion-icon name="people-outline" size="large" class="header-title-icon"></ion-icon>
+      {{"users" | translate}}
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="openFilter()">
+        <ion-icon slot="icon-only" name="options"></ion-icon>
+      </ion-button>
+      <ion-button (click)="add()">
+        <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-spinner *ngIf="loadingIndicator" class="loading-spinner"></ion-spinner>
+  <ngx-datatable class="bootstrap fullscreen" [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="0"
+    [rowHeight]="'auto'" [scrollbarV]="false" [scrollbarH]="true" [rows]="items"
+    [messages]="{ emptyMessage: '<h1 class=ion-text-center>'+('empty_data' | translate)+'</h1>' }"
+    [loadingIndicator]="loadingIndicator">
+    <ngx-datatable-column [name]="'actions' | translate" [sortable]="false" [width]="90">
+      <ng-template let-rowIndex="rowIndex" ngx-datatable-cell-template>
+        <ion-button (click)="edit(rowIndex)" size="small" class="square-btn" color="dark" fill="outline">
+          <ion-icon slot="icon-only" name="create"></ion-icon>
+        </ion-button>
+        <ion-button (click)="remove(rowIndex)" size="small" class="square-btn" color="danger" fill="outline">
+          <ion-icon slot="icon-only" name="trash"></ion-icon>
+        </ion-button>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column [name]="'no.' | translate" [width]="40" [sortable]="false"><ng-template
+        let-rowIndex="rowIndex" ngx-datatable-cell-template>{{rowIndex + 1}}</ng-template></ngx-datatable-column>
+    <ngx-datatable-column [name]="'name' | translate" prop="name"></ngx-datatable-column>
+    <ngx-datatable-column [name]="'email' | translate" prop="email"></ngx-datatable-column>
+    <ngx-datatable-column [name]="'role' | translate" prop="role">
+      <ng-template ngx-datatable-cell-template let-value="value">
+        {{ value | translate }}
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column [name]="'updated_at' | translate" prop="updated_at" [width]="100" class="ion-text-start" dir="ltr"></ngx-datatable-column>
+  </ngx-datatable>
+</ion-content>

@@ -3,7 +3,16 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  appName: 'البوسنة بعيون خليجية',
+  serverUrl: 'http://bosnia-gulf-system.test/',
+  googlemaps: {
+    apiKey: 'AIzaSyBWOOHNVu06GACtbez9OUrbxiQb-TxqV48',
+    defaultLocation: {
+      lat: 24.422830,
+      lng: 54.50255
+    }
+  }
 };
 
 /*

@@ -1,6 +1,20 @@
 // Ionic Variables and Theming. For more info, please see:
 // http://ionicframework.com/docs/theming/
 
+@import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rubik&display=swap');
+
+html[lang="ar"], html[lang="ar"] * {
+  --ion-font-family: 'Cairo';
+  font-family: 'Cairo';
+  text-align: start;
+}
+html[lang="en"], html[lang="en"] * {
+  --ion-font-family: 'Rubik';
+  font-family: 'Rubik';
+  text-align: start;
+ }
+
 /** Ionic CSS Variables **/
 :root {
   /** primary **/
@@ -76,7 +90,7 @@
   --ion-color-light-tint: #f5f6f9;
 }
 
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: darkl) {
   /*
    * Dark Colors
    * -------------------------------------------

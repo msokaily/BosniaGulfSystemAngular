@@ -1,0 +1,50 @@
+<ion-content class="ion-padding ion-text-center">
+    <app-language-switch dir="ltr" style="width: 200px; margin: auto; display: inline-block; right: 20px; top: 20px; position: absolute;"></app-language-switch>
+    <div class="spacer" style="height: 25px;"></div>
+    <ion-text color="dark">
+        <div class="h2 page-title">
+            {{ "login.title" | translate }}
+            <div class="border"></div>
+        </div>
+    </ion-text>
+    <div class="ion-text-center ion-padding">
+        <ion-img src="assets/imgs/logo.png" style="margin: auto; height: 150px;"></ion-img>
+    </div>
+    <div class="spacer" style="height: 25px;"></div>
+    <form [formGroup]="form" (ngSubmit)="submit()">
+        <ion-item *ngIf="email?.invalid && email?.touched" lines="none" color="danger" class="form-error">
+            <div>{{ "login.invalidEmail" | translate }}</div>
+        </ion-item>
+        <div class="custom-input">
+            <ion-item lines="none">
+                <ion-icon slot="start" name="mail-outline"></ion-icon>
+                <ion-label position="floating">{{ "login.email" | translate }} <ion-text color="danger">*</ion-text>
+                </ion-label>
+                <ion-input (keyup.enter)="submit()" required formControlName="email" type="email"></ion-input>
+            </ion-item>
+        </div>
+        <div class="spacer" style="height: 15px;"></div>
+        <div class="custom-input">
+            <ion-item lines="none">
+                <ion-icon slot="start" name="lock-closed-outline"></ion-icon>
+                <ion-label position="floating">{{ "login.password" | translate }} <ion-text color="danger">*</ion-text>
+                </ion-label>
+                <ion-input (keyup.enter)="submit()" required formControlName="password"
+                    [type]="showPassword ? 'text' : 'password'"></ion-input>
+                <ion-icon slot="end" name="eye-off-outline" *ngIf="!showPassword"
+                    (click)="showPassword = true"></ion-icon>
+                <ion-icon slot="end" name="eye-outline" *ngIf="showPassword" (click)="showPassword = false"></ion-icon>
+            </ion-item>
+        </div>
+        <!-- <div class="ion-text-start">
+            <ion-button (click)="goResetpass()" type="button" color="dark" expand="inline" fill="clear" shape="round">
+                {{ "login.forgotPassword" | translate }}
+            </ion-button>
+        </div> -->
+        <div class="spacer" style="height: 25px;"></div>
+        <ion-button [disabled]="isLoading" expand="block" class="bold" shape="round" size="large" type="submit">
+            <ion-spinner *ngIf="isLoading" slot="start" style="margin-inline: 5px;"></ion-spinner>
+            {{ "login.login" | translate }}
+        </ion-button>
+    </form>
+</ion-content>

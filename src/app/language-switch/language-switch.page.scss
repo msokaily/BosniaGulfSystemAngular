@@ -1,0 +1,33 @@
+.lang-switch-container {
+  display: flex;
+  align-items: center;
+  flex-direction: row-reverse;
+  cursor: pointer;
+  ion-item {
+    --background-hover: none;
+    --background-focused: none;
+    --ripple-color: #FFF;
+  }
+  ion-select::part(icon) {
+    display: none;
+  }
+  ion-select {
+    font-weight: bold;
+    --padding-top: 0;
+  }
+  >ion-icon {
+    font-size: 20px;
+    padding: 7px;
+    border-radius: 50px;
+  }
+}
+
+// ::ng-deep {
+//     .lang-switch-container {
+//         ion-select {
+//             .select-icon {
+//                 display: none;
+//             }
+//         }
+//     }
+// }

@@ -24,3 +24,210 @@
 @import "@ionic/angular/css/text-alignment.css";
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
+@import "../src/assets/css/ngx-datatable-bootstrap.scss";
+
+
+* {
+  letter-spacing: normal !important;
+}
+
+ion-button:not(.button-has-icon-only),
+ion-segment-button:not(.button-has-icon-only) {
+  --padding-top: 7px;
+}
+
+.d-flex {
+  display: flex;
+}
+
+.tac {
+  text-align: center !important;
+}
+
+.tar {
+  text-align: right !important;
+}
+
+.tal {
+  text-align: left !important;
+}
+
+.rtl {
+  direction: rtl !important;
+}
+
+.ltr {
+  direction: ltr !important;
+}
+
+.a-c {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
+  margin: auto;
+  z-index: 10;
+}
+
+.loading-spinner {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 0;
+  right: 0;
+  margin: auto;
+  width: 70px;
+  height: 70px;
+}
+
+.custom-input {
+  ion-input.label-floating {
+    label {
+      .label-text-wrapper {
+        // margin-bottom: 3px;
+        margin-top: -12px;
+      }
+    }
+  }
+}
+
+.custom-input {
+  ion-item::part(native) {
+    line-height: 1.2;
+  }
+
+  .custom-label {
+    text-align: start;
+    margin-bottom: 5px;
+    // font-weight: bold;
+    font-size: 17px;
+  }
+
+  ion-input,
+  ion-select {
+    min-height: 50px !important;
+
+    label {
+      text-align: start;
+      // font-weight: bold !important;
+      font-size: 17px;
+      // line-height: 1 !important;
+      .label-text-wrapper {
+        // margin-bottom: 3px;
+        margin-top: -24px;
+      }
+    }
+  }
+
+  ion-item {
+    border: 1px solid #e8e8e8;
+    border-radius: 15px;
+    align-items: center;
+  }
+
+  ion-icon[slot="start"] {
+    margin-inline-end: 15px;
+  }
+
+  ion-icon[slot="end"] {
+    margin-inline-end: 15px;
+  }
+
+  .phone-div {
+    border: 1px solid;
+    border-radius: 10px;
+    padding: 10px;
+    position: relative;
+    overflow: visible;
+    margin-inline-start: 2px;
+  }
+
+  .phone-div:after {
+    content: "▾";
+    position: absolute;
+    right: -5px;
+    top: 6px;
+    font-size: 23px;
+    height: 23px;
+    background: white;
+    width: 15px;
+  }
+}
+
+.form-error {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  margin-inline: 20px;
+  width: fit-content;
+  --min-height: 30px !important;
+}
+
+
+.ngx-datatable {
+  .empty-row {
+    text-align: center;
+  }
+
+  .sc-ion-input-md-h:not(.legacy-input) {
+    min-height: initial;
+  }
+
+  .custom-input {
+    ion-item {
+      --min-height: initial;
+      --padding-start: 5px;
+      --padding-end: 5px;
+      margin: -3px -3px;
+    }
+  }
+
+}
+
+.square-btn {
+  --padding-start: 3px;
+  --padding-end: 3px;
+}
+
+.lang-switch-popover::part(content) {
+  --min-width: 120px;
+  --max-width: 120px;
+}
+
+.filter-popover {
+  --min-width: 380px;
+  --max-height: 100%;
+}
+
+.editpage-popover {
+  --min-width: 420px;
+  --max-height: 100%;
+}
+
+.filter-popover::part(content),
+.editpage-popover::part(content) {
+  border-radius: 20px;
+  left: 0 !important;
+  right: 0 !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  margin: auto;
+}
+
+.custom-input .input-label-placement-fixed.sc-ion-input-md-h .label-text-wrapper.sc-ion-input-md {
+  margin-inline-end: 0px;
+}
+
+ngx-datatable {
+  datatable-body-cell {
+    overflow: visible !important;
+  }
+  .datatable-body-cell-label {
+    white-space: normal;
+  }
+}
+
+.header-title-icon {
+  margin-bottom: -7px;
+  margin-inline-end: 10px;
+}
