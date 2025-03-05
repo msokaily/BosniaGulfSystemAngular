@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "www",
+            "outputPath": "../bg_system_output",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -28,12 +28,14 @@
                 "glob": "**/*.svg",
                 "input": "node_modules/ionicons/dist/ionicons/svg",
                 "output": "./svg"
-              }
+              },
+              "src/OneSignalSDKWorker.js"
             ],
             "styles": [
               "./node_modules/@swimlane/ngx-datatable/index.css",
               "./node_modules/@swimlane/ngx-datatable/themes/material.css",
               "./node_modules/@swimlane/ngx-datatable/assets/icons.css",
+              "./node_modules/flatpickr/dist/flatpickr.css",
               "src/theme/variables.scss",
               "src/global.scss"
             ],

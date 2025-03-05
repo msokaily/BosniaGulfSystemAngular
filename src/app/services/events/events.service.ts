@@ -8,11 +8,9 @@ export interface EVENT {
 }
 
 export enum EVENTS {
-  refreshSeller = 'refreshSeller',
-  refreshSellerItems = 'refreshSellerItems',
   refreshUser = 'refreshUser',
-  refreshCart = 'refreshCart',
-  refreshUserAddress = 'refreshUserAddress',
+  refreshOrders = 'refreshOrders',
+  setFormData = 'setFormData',
 }
 
 @Injectable({

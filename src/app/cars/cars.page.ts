@@ -14,6 +14,10 @@ import { EditPagePage } from '../edit-page/edit-page.page';
 })
 export class CarsPage implements OnInit {
 
+  pageName = 'cars';
+  
+  permissions: any;
+  
   filterValues: any;
   items: any[] = [];
 
@@ -49,7 +53,8 @@ export class CarsPage implements OnInit {
     this.loadingIndicator = false;
   }
 
-  async add(data?: any) {
+  async add(data?: any, errors?: any) {
+    const loading = await this.shared.loading({message: await this.shared.trans('common.loading')});
     const carCompanies = await this.api.carCompanies();
     const inputs: CustomInput[] = [
       {
@@ -108,12 +113,29 @@ export class CarsPage implements OnInit {
         value: data?.register_end || ''
       },
       {
+        name: 'status',
+        type: 'select',
+        title: await this.shared.trans('status'),
+        value: data?.status || 1,
+        options: [
+          {
+            id: 1,
+            name: await this.shared.trans('active')
+          },
+          {
+            id: 2,
+            name: await this.shared.trans('inactive')
+          }
+        ]
+      },
+      {
         name: 'image',
         type: 'file',
         title: await this.shared.trans('image'),
         value: data?.image || null,
       }
     ];
+    loading.dismiss();
     const pop = await this.popoverCtrl.create({
       component: EditPagePage,
       cssClass: 'editpage-popover',
@@ -123,14 +145,17 @@ export class CarsPage implements OnInit {
     pop.componentProps = {
       pop,
       inputs,
-      title: await this.shared.trans('add')
+      title: await this.shared.trans('add'),
+      errors
     };
     pop.onDidDismiss().then(async v => {
       this.randomToken = Math.random() * 1000;
       if (v.role === 'success') {
+        const loading = await this.shared.loading({message: await this.shared.trans('common.saving')});
         const resp = await this.api.carsCreate(v.data);
-        if (!resp) {
-          this.add(v.data);
+        loading.dismiss();
+        if (!resp?.status) {
+          this.add(v.data, resp?.data?.errors);
         }
         this.refresh(true);
       }
@@ -138,67 +163,85 @@ export class CarsPage implements OnInit {
     pop.present();
   }
 
-  async edit(index: number) {
+  async edit(index: number, data?: any, errors?: any) {
+    const loading = await this.shared.loading({message: await this.shared.trans('common.loading')});
     const carCompanies = await this.api.carCompanies();
     const inputs: CustomInput[] = [
       {
         name: 'name',
         type: 'text',
         title: await this.shared.trans('name'),
-        value: this.items[index]?.name || ''
+        value: data?.name || this.items[index]?.name || ''
       },
       {
         name: 'company',
         type: 'select',
         title: await this.shared.trans('company'),
         options: carCompanies ? carCompanies.map((v:any) => { return { id: v?.id, name: v?.name }; }) : [],
-        value: this.items[index]?.company?.id || null,
+        value: data?.company || this.items[index]?.company?.id || null,
       },
       {
         name: 'model',
         type: 'text',
         title: await this.shared.trans('model'),
-        value: this.items[index]?.model || ''
+        value: data?.model || this.items[index]?.model || ''
       },
       {
         name: 'cost',
         type: 'text',
         title: await this.shared.trans('cost'),
-        value: this.items[index]?.cost || ''
+        value: data?.cost || this.items[index]?.cost || ''
       },
       {
         name: 'price',
         type: 'text',
         title: await this.shared.trans('price'),
-        value: this.items[index]?.price || ''
+        value: data?.price || this.items[index]?.price || ''
       },
       {
         name: 'register_no',
         type: 'text',
         title: await this.shared.trans('register_no'),
-        value: this.items[index]?.register_no || ''
+        value: data?.register_no || this.items[index]?.register_no || ''
       },
       {
         name: 'register_start',
         type: 'date',
         title: await this.shared.trans('register_start'),
         format: 'YYYY-MM-dd',
-        value: this.items[index]?.register_start || ''
+        value: data?.register_start || this.items[index]?.register_start || ''
       },
       {
         name: 'register_end',
         type: 'date',
         format: 'YYYY-MM-dd',
         title: await this.shared.trans('register_end'),
-        value: this.items[index]?.register_end || ''
+        value: data?.register_end || this.items[index]?.register_end || ''
+      },
+      {
+        name: 'status',
+        type: 'select',
+        title: await this.shared.trans('status'),
+        value: data?.status || parseInt(this.items[index]?.status) || 1,
+        options: [
+          {
+            id: 1,
+            name: await this.shared.trans('active')
+          },
+          {
+            id: 2,
+            name: await this.shared.trans('inactive')
+          }
+        ]
       },
       {
         name: 'image',
         type: 'file',
         title: await this.shared.trans('image'),
-        value: this.items[index]?.image || null,
+        value: data?.image || this.items[index]?.image || null,
       }
     ];
+    loading.dismiss();
     const pop = await this.popoverCtrl.create({
       component: EditPagePage,
       cssClass: 'editpage-popover',
@@ -207,12 +250,18 @@ export class CarsPage implements OnInit {
     });
     pop.componentProps = {
       pop,
-      inputs
+      inputs,
+      errors
     };
     pop.onDidDismiss().then(async v => {
       this.randomToken = Math.random() * 1000;
       if (v.role === 'success') {
+        const loading = await this.shared.loading({message: await this.shared.trans('common.saving')});
         const resp = await this.api.carsUpdate(this.items[index]?.id, v.data);
+        loading.dismiss();
+        if (!resp?.status) {
+          this.edit(index, v.data, resp?.data?.errors);
+        }
         this.refresh(true);
       }
     });
@@ -234,8 +283,7 @@ export class CarsPage implements OnInit {
           text: trans['common.yes'],
           handler: async () => {
             const item = this.items[index];
-            console.log('remove Item: ', item);
-            this.items.splice(index, 1);
+            this.items = this.items.filter(v => v.id !== item.id);
             this.api.carsDelete(item?.id);
             this.shared.toast({message: trans['common.remove-success'], color: 'success', duration: 1500});
           }
@@ -257,6 +305,18 @@ export class CarsPage implements OnInit {
         value: this.filterValues?.search || ''
       },
       {
+        name: 'from',
+        type: 'date',
+        title: await this.shared.trans('common.from'),
+        value: this.filterValues?.from || undefined
+      },
+      {
+        name: 'to',
+        type: 'date',
+        title: await this.shared.trans('common.to'),
+        value: this.filterValues?.to || undefined
+      },
+      {
         name: 'register_end',
         type: 'date',
         title: await this.shared.trans('register_end'),
@@ -269,7 +329,27 @@ export class CarsPage implements OnInit {
         options: carCompanies ? carCompanies.map((v:any) => { return { id: v?.id, name: v?.name }; }) : [],
         value: this.filterValues?.company || null,
         multiple: true
-      }
+      },
+      {
+        name: 'status',
+        type: 'select',
+        title: await this.shared.trans('status'),
+        value: this.filterValues?.status || undefined,
+        options: [
+          {
+            id: null,
+            name: await this.shared.trans('undefined')
+          },
+          {
+            id: 1,
+            name: await this.shared.trans('active')
+          },
+          {
+            id: 2,
+            name: await this.shared.trans('inactive')
+          }
+        ]
+      },
     ];
     const pop = await this.popoverCtrl.create({
       component: FilterPage,

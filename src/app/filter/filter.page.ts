@@ -31,9 +31,12 @@ export class FilterPage implements OnInit {
   }
 
   submit() {
-    let ret: any = {};
+    let ret: any;
     this.filters.forEach((elm, index) => {
       if (elm?.value) {
+        if (!ret) {
+          ret = {};
+        }
         ret[elm.name] = elm?.value;
       }
     });
@@ -47,6 +50,30 @@ export class FilterPage implements OnInit {
   close() {
     this.shared.backNavHistory();
     this.pop.dismiss(null, 'closed');
+  }
+
+  getFormat(filter: CustomInput) {
+    switch (filter.format) {
+      case 'Y':
+        return 'year'
+        break;
+      case 'M':
+        return 'month'
+        break;
+      case 'MM':
+        return 'month'
+        break;
+      case 'Y-M':
+        return 'month-year'
+        break;
+      case 'Y-MM':
+        return 'month-year'
+        break;
+    
+      default:
+        return 'date';
+        break;
+    }
   }
 
 }

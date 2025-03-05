@@ -70,7 +70,23 @@ ion-segment-button:not(.button-has-icon-only) {
   z-index: 10;
 }
 
-.loading-spinner {
+.fix-dir {
+  direction: ltr;
+  text-align: end !important;
+}
+
+.flex-inline-center {
+  display: inline-flex;
+  align-items: center;
+}
+
+[dir="ltr"] {
+  .fix-dir {
+    text-align: start !important;
+  }
+}
+
+.my-loading-spinner {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -99,7 +115,7 @@ ion-segment-button:not(.button-has-icon-only) {
 
   .custom-label {
     text-align: start;
-    margin-bottom: 5px;
+    // margin-bottom: 5px;
     // font-weight: bold;
     font-size: 17px;
   }
@@ -112,11 +128,6 @@ ion-segment-button:not(.button-has-icon-only) {
       text-align: start;
       // font-weight: bold !important;
       font-size: 17px;
-      // line-height: 1 !important;
-      .label-text-wrapper {
-        // margin-bottom: 3px;
-        margin-top: -24px;
-      }
     }
   }
 
@@ -155,6 +166,62 @@ ion-segment-button:not(.button-has-icon-only) {
   }
 }
 
+// .order-row-flex {
+//   height: auto !important;
+//   datatable-body-cell {
+//     height: auto !important;
+//   }
+// }
+
+.paid-cell {
+  background-color: #2dd36f42 !important;
+}
+
+.native-date-input {
+  border: 1px solid #f0f0f0;
+  border-radius: 7px;
+  padding: 5px;
+  background: var(--ion-color-light);
+  outline: none;
+}
+
+[dir="rtl"] {
+  .custom-input {
+
+    ion-input.input-label-placement-floating,
+    ion-select {
+      label {
+        .label-text-wrapper {
+          margin-top: -24px !important;
+        }
+      }
+    }
+
+    ion-input.input-label-placement-floating.has-value,
+    ion-select {
+      label {
+        .label-text-wrapper {
+          margin-top: -19px !important;
+        }
+      }
+    }
+  }
+}
+
+[dir="ltr"] {
+  .custom-input {
+
+    ion-input.input-label-placement-floating,
+    ion-select {
+      label {
+        .label-text-wrapper {
+          margin-top: -5px !important;
+        }
+      }
+    }
+  }
+}
+
 .form-error {
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
@@ -189,6 +256,12 @@ ion-segment-button:not(.button-has-icon-only) {
   --padding-end: 3px;
 }
 
+.popup-info::part(content) {
+  --min-width: 85%;
+  --max-width: 480px;
+  border-radius: 10px;
+}
+
 .lang-switch-popover::part(content) {
   --min-width: 120px;
   --max-width: 120px;
@@ -201,17 +274,21 @@ ion-segment-button:not(.button-has-icon-only) {
 
 .editpage-popover {
   --min-width: 420px;
-  --max-height: 100%;
+  --max-height: 95%;
+  // --offset-y: 120px;
+}
+
+@media only screen and (max-width: 680px) {
+  .editpage-popover {
+    --min-width: 90%;
+    --max-height: 90%;
+    // --offset-y: 50px;
+  }
 }
 
 .filter-popover::part(content),
 .editpage-popover::part(content) {
   border-radius: 20px;
-  left: 0 !important;
-  right: 0 !important;
-  top: 50% !important;
-  transform: translateY(-50%) !important;
-  margin: auto;
 }
 
 .custom-input .input-label-placement-fixed.sc-ion-input-md-h .label-text-wrapper.sc-ion-input-md {
@@ -222,6 +299,7 @@ ngx-datatable {
   datatable-body-cell {
     overflow: visible !important;
   }
+
   .datatable-body-cell-label {
     white-space: normal;
   }
@@ -230,4 +308,56 @@ ngx-datatable {
 .header-title-icon {
   margin-bottom: -7px;
   margin-inline-end: 10px;
+}
+
+[dir="ltr"] {
+  .label-floating.sc-ion-input-md-h .label-text-wrapper.sc-ion-input-md {
+    transform: translateY(78%) scale(0.75);
+  }
+}
+
+.calender-btn {
+  .date-txt {
+    color: var(--ion-color-dark) !important;
+  }
+}
+
+.flatpickr-calendar {
+  text-align: center !important;
+
+  * {
+    text-align: center !important;
+  }
+}
+
+[dir="ltr"] {
+  .header-row {
+    ion-col {
+      text-align: start !important;
+    }
+  }
+}
+
+.split-pane-visible>.split-pane-side {
+  // min-width: 150px!important;
+  max-width: 170px !important;
+}
+
+.logs-popup {
+  table {
+    width: 100%;
+    tr:last-child {
+      border-bottom: none;
+    }
+    tr {
+      border-bottom: 1px solid #ececec;
+      td, th {
+        padding: 10px 10px;
+        align-content: start;
+      }
+      th:not(.log-data-col), td:not(.log-data-col) {
+        min-width: 50px;
+      }
+    }
+  }
 }

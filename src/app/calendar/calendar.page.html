@@ -1,0 +1,58 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      <ion-icon name="calendar-outline" size="large" class="header-title-icon"></ion-icon>
+      {{"orders-calendar" | translate}}
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="refresh()">
+        <ion-icon *ngIf="!loadingIndicator" slot="icon-only" name="refresh"></ion-icon>
+        <ion-spinner *ngIf="loadingIndicator"></ion-spinner>
+      </ion-button>
+      <ion-button (click)="openFilter()" dir="ltr">
+        <ion-icon slot="end" name="options"></ion-icon>
+        <b>{{ selectedDate }}</b>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-spinner *ngIf="loadingIndicator" class="my-loading-spinner"></ion-spinner>
+  <div class="calendar-container" *ngFor="let month of months" dir="ltr">
+    <h2>{{ month.month }} {{ month.year }}</h2>
+    
+    <!-- Weekdays Header -->
+    <div class="weekdays">
+      <div *ngFor="let d of ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']">{{ d }}</div>
+    </div>
+    
+    <!-- Render each row separately -->
+    <div class="day-rows">
+      <div class="day-row" *ngFor="let row of month.rows" [style.height.px]="row.height">
+        <!-- Render day cells for this row -->
+        <div class="day-box" *ngFor="let day of row.days">
+          <span *ngIf="day.day">{{ day.day }}</span>
+        </div>
+        <!-- Overlay reservation blocks for this row -->
+        <ng-container *ngFor="let res of row.reservations">
+          <div class="reservation-block"
+            [style.top.px]="res.top"
+            [style.left.%]="res.left"
+            [style.width.%]="res.width"
+            [style.background]="res.color"
+            [title]="res.name + ' - ' + res.customer"
+            (click)="edit(res.id)">
+            <img [src]="res.image" alt="{{ res.name }}">
+            <span>{{ res.name }}</span>
+            <span class="ion-padding-horizontal"> - </span>
+            <span>{{ res.customer }}</span>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</ion-content>

@@ -1,0 +1,105 @@
+<div>
+  <div *ngIf="!checkValidation && !isFirst" class="ion-padding">
+    <ion-text color="danger">
+      {{ "invalid_values" | translate }}
+    </ion-text>
+  </div>
+  <div class="errors-list" *ngIf="errors">
+    <ion-list lines="none">
+      <div *ngFor="let error of errors; let index = index;">
+        <ion-text color="danger">
+          {{index+1}}) {{error}}
+        </ion-text>
+      </div>
+    </ion-list>
+  </div>
+  <div *ngIf="inputs && inputs.length > 0">
+    <ion-grid>
+      <ion-row>
+        <ion-col [size]="input?.colSize || colSize" *ngFor="let input of inputs" [class.ion-hide]="input.type === 'hidden'">
+          <div class="custom-input" *ngIf="['text', 'email', 'password', 'number'].includes(input.type)">
+            <ion-item lines="none">
+              <ion-input [type]="input.type" [readonly]="input?.readonly || false" [label]="input.title" [required]="input?.required ?? false"
+                labelPlacement="floating" [(ngModel)]="form[input.name]" [min]="input?.min || null" [max]="input?.max || null"></ion-input>
+            </ion-item>
+            <ion-note *ngIf="input?.note" class="ion-padding-start" color="warning">{{input.note}}</ion-note>
+          </div>
+          <div class="custom-input" *ngIf="['hidden'].includes(input.type)">
+            <ion-item lines="none">
+              <ion-input [type]="input.type" [readonly]="input?.readonly || false" [label]="input.title" [required]="input?.required ?? false"
+                labelPlacement="floating" [(ngModel)]="form[input.name]"></ion-input>
+            </ion-item>
+            <ion-note *ngIf="input?.note" class="ion-padding-start" color="warning">{{input.note}}</ion-note>
+          </div>
+          <div class="custom-input" *ngIf="input.type === 'date'">
+            <ion-item lines="none">
+              <ion-label class="custom-label">{{input.title}}</ion-label>
+              <ion-datetime-button [datetime]="prefix+input.name" [disabled]="input?.readonly || false">
+                <div slot="date-target">{{ form[input.name] === null ? input?.format : (form[input.name] | date: (input?.format || 'YYYY-MM-dd')) }}</div>
+              </ion-datetime-button>
+              <ion-modal [keepContentsMounted]="true">
+                <ng-template>
+                  <ion-datetime *ngIf="form[input.name]" [id]="prefix+input.name" [(ngModel)]="form[input.name]" [doneText]="'common.ok' | translate"
+                    [cancelText]="'common.cancel' | translate" [presentation]="'date'" [showDefaultButtons]="true"
+                    [showDefaultTitle]="true" [required]="input?.required ?? false"
+                    (ionChange)="dateChanged($event, input.name)"
+                    [max]="input?.max || 3000-12-30"
+                    [showClearButton]="false"
+                    [clearText]="'common.clear' | translate"></ion-datetime>
+                </ng-template>
+              </ion-modal>
+            </ion-item>
+            <ion-note *ngIf="input?.note" class="ion-padding-start" color="warning">{{input.note}}</ion-note>
+          </div>
+          <div class="custom-input" *ngIf="input.type === 'native-date'">
+            <ion-item lines="none">
+              <ion-label class="custom-label">{{input.title}}</ion-label>
+              <input class="native-date-input" [id]="prefix+input.name" type="date" [disabled]="input?.readonly || false" [(ngModel)]="form[input.name]" [required]="input?.required ?? false"
+                (ionChange)="dateChanged($event, input.name)" [min]="input?.min || '1900-01-01'" [max]="input?.max || 3000-12-30">
+            </ion-item>
+            <ion-note *ngIf="input?.note" class="ion-padding-start" color="warning">{{input.note}}</ion-note>
+          </div>
+          <div class="custom-input" *ngIf="input.type === 'time'">
+            <ion-item lines="none">
+              <ion-label class="custom-label">{{input.title}}</ion-label>
+              <ion-datetime-button [datetime]="prefix+input.name" [disabled]="input?.readonly || false">
+                <div slot="date-target">{{ form[input.name] }}</div>
+              </ion-datetime-button>
+              <ion-modal [keepContentsMounted]="true">
+                <ng-template>
+                  <ion-datetime *ngIf="form[input.name]" [id]="prefix+input.name" [(ngModel)]="form[input.name]" [doneText]="'common.ok' | translate"
+                    [cancelText]="'common.cancel' | translate" [presentation]="'time'" [showDefaultButtons]="true"
+                    [showDefaultTitle]="true" [required]="input?.required ?? false" [max]="input?.max || undefined"></ion-datetime>
+                </ng-template>
+              </ion-modal>
+            </ion-item>
+            <ion-note *ngIf="input?.note" class="ion-padding-start" color="warning">{{input.note}}</ion-note>
+          </div>
+          <div class="custom-input" *ngIf="input.type === 'select' && input?.options">
+            <ion-item lines="none">
+              <ion-select [label]="input.title" [disabled]="input?.readonly || false" labelPlacement="fixed" [(ngModel)]="form[input.name]"
+                [multiple]="input?.multiple" [placeholder]="('select' | translate) + ' ' +input.title"
+                [interface]="input?.multiple ? 'alert' : 'popover'" [okText]="'common.select' | translate"
+                [cancelText]="'common.cancel' | translate" [required]="input?.required ?? false"
+                (ionChange)="input?.changed ? input?.changed($event) : null">
+                <ion-select-option *ngFor="let opt of input?.options" [value]="opt?.id">{{ opt?.name
+                  }}</ion-select-option>
+              </ion-select>
+            </ion-item>
+            <ion-note *ngIf="input?.note" class="ion-padding-start" color="warning">{{input.note}}</ion-note>
+          </div>
+          <div class="custom-input" *ngIf="input.type === 'file'">
+            <ion-item lines="none">
+              <ion-input type="file" [readonly]="input?.readonly || false" [label]="input.title" (ionChange)="fileChanged($event.detail, input.name)"
+                labelPlacement="fixed" [required]="input?.required ?? false"></ion-input>
+            </ion-item>
+            <ion-item lines="none" *ngIf="input?.value" style="--padding-bottom: 5px; --padding-top: 5px;">
+              <ion-img [src]="input?.value" style="height: 200px; margin: auto;"></ion-img>
+            </ion-item>
+            <ion-note *ngIf="input?.note" class="ion-padding-start" color="warning">{{input.note}}</ion-note>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+</div>

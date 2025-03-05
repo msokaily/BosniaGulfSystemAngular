@@ -12,7 +12,7 @@ export class McurrencyPipe implements PipeTransform {
 
   }
   transform(value: any, ...args: unknown[]): string {
-    if (!value) { return value; };
+    if (value == null) { return value; };
     let v: any = value;
     if (value.toString().includes('.')) {
       v = parseFloat(value).toFixed(2);

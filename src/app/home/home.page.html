@@ -3,10 +3,451 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>{{"orders" | translate}}</ion-title>
+    <ion-title>
+      <ion-icon name="home-outline" size="large" class="header-title-icon"></ion-icon>
+      {{"home" | translate}}
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="refresh()">
+        <ion-icon *ngIf="!loadingIndicator" slot="icon-only" name="refresh"></ion-icon>
+        <ion-spinner *ngIf="loadingIndicator"></ion-spinner>
+      </ion-button>
+      <ion-button (click)="openFilter()" dir="ltr">
+        <ion-icon slot="start" name="options"></ion-icon>
+        <b>{{ selectedDate }}</b>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-  <h1>orders</h1>
+  <ion-spinner *ngIf="loadingIndicator" class="my-loading-spinner"></ion-spinner>
+  <ion-row>
+    <ion-col size="9">
+      <ion-row>
+        <ion-col size="12" *ngIf="stats?.orders as itm">
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title>{{'orders' | translate}}</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <div>
+                <ion-row class="header-row">
+                  <ion-col size="2.4">
+                    <ion-text color="dark">
+                      {{'status' | translate}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="2.4">
+                    <ion-text color="dark">
+                      {{'count' | translate}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="2.4">
+                    <ion-text color="dark">
+                      {{'total' | translate}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="2.4">
+                    <ion-text color="dark">
+                      {{'revenue' | translate}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="2.4">
+                    <ion-text color="dark">
+                      {{'paid' | translate}}
+                    </ion-text>
+                  </ion-col>
+                </ion-row>
+                <ion-row class="stat-num">
+                  <ion-col size="2.4">
+                    <ion-text color="warning">
+                      {{'order_status.new' | translate}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="2.4">
+                    <ion-text color="warning">
+                      {{itm.new.count}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="2.4">
+                    <ion-text color="warning">
+                      {{itm.new.total | mcurrency}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="2.4">
+                    <ion-text color="warning">
+                      {{itm.new.revenue | mcurrency}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="2.4">
+                    <ion-text color="warning" *ngIf="itm.new?.paid as paid">
+                      <div *ngIf="paid?.BAM > 0">{{ paid?.BAM | mcurrency: 'BAM' }}</div>
+                      <div *ngIf="paid?.EUR > 0">{{ paid?.EUR | mcurrency: 'EUR' }}</div>
+                      <div *ngIf="paid?.USD > 0">{{ paid?.USD | mcurrency: 'USD' }}</div>
+                      <div *ngIf="paid?.BAM === 0 && paid?.EUR === 0 && paid?.USD === 0">-</div>
+                    </ion-text>
+                  </ion-col>
+                </ion-row>
+                <ion-row class="stat-num">
+                  <ion-col size="2.4">
+                    <ion-text color="primary">
+                      {{'order_status.confirmed' | translate}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="2.4">
+                    <ion-text color="primary">
+                      {{itm.confirmed.count}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="2.4">
+                    <ion-text color="primary">
+                      {{itm.confirmed.total | mcurrency}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="2.4">
+                    <ion-text color="primary">
+                      {{itm.confirmed.revenue | mcurrency}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="2.4">
+                    <ion-text color="primary" *ngIf="itm.confirmed?.paid as paid">
+                      <div *ngIf="paid?.BAM > 0">{{ paid?.BAM | mcurrency: 'BAM' }}</div>
+                      <div *ngIf="paid?.EUR > 0">{{ paid?.EUR | mcurrency: 'EUR' }}</div>
+                      <div *ngIf="paid?.USD > 0">{{ paid?.USD | mcurrency: 'USD' }}</div>
+                      <div *ngIf="paid?.BAM === 0 && paid?.EUR === 0 && paid?.USD === 0">-</div>
+                    </ion-text>
+                  </ion-col>
+                </ion-row>
+                <ion-row class="stat-num">
+                  <ion-col size="2.4">
+                    <ion-text color="success">
+                      {{'order_status.completed' | translate}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="2.4">
+                    <ion-text color="success">
+                      {{itm.completed.count}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="2.4">
+                    <ion-text color="success">
+                      {{itm.completed.total | mcurrency}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="2.4">
+                    <ion-text color="success">
+                      {{itm.completed.revenue | mcurrency}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="2.4">
+                    <ion-text color="success" *ngIf="itm.completed?.paid as paid">
+                      <div *ngIf="paid?.BAM > 0">{{ paid?.BAM | mcurrency: 'BAM' }}</div>
+                      <div *ngIf="paid?.EUR > 0">{{ paid?.EUR | mcurrency: 'EUR' }}</div>
+                      <div *ngIf="paid?.USD > 0">{{ paid?.USD | mcurrency: 'USD' }}</div>
+                      <div *ngIf="paid?.BAM === 0 && paid?.EUR === 0 && paid?.USD === 0">-</div>
+                    </ion-text>
+                  </ion-col>
+                </ion-row>
+                <ion-row class="stat-num">
+                  <ion-col size="2.4">
+                    <ion-text color="danger">
+                      {{'order_status.canceled' | translate}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="2.4">
+                    <ion-text color="danger">
+                      {{itm.canceled.count}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="2.4">
+                    <ion-text color="danger">
+                      {{itm.canceled.total | mcurrency}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="2.4">
+                    <ion-text color="danger">
+                      {{itm.canceled.revenue | mcurrency}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="2.4">
+                    <ion-text color="danger" *ngIf="itm.canceled?.paid as paid">
+                      <div *ngIf="paid?.BAM > 0">{{ paid?.BAM | mcurrency: 'BAM' }}</div>
+                      <div *ngIf="paid?.EUR > 0">{{ paid?.EUR | mcurrency: 'EUR' }}</div>
+                      <div *ngIf="paid?.USD > 0">{{ paid?.USD | mcurrency: 'USD' }}</div>
+                      <div *ngIf="paid?.BAM === 0 && paid?.EUR === 0 && paid?.USD === 0">-</div>
+                    </ion-text>
+                  </ion-col>
+                </ion-row>
+                <ion-row class="stat-num">
+                  <ion-col size="2.4">
+                    <ion-text color="medium">
+                      {{'order_status.refunded' | translate}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="2.4">
+                    <ion-text color="medium">
+                      {{itm.refunded.count}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="2.4">
+                    <ion-text color="medium">
+                      {{itm.refunded.total | mcurrency}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="2.4">
+                    <ion-text color="medium">
+                      {{itm.refunded.revenue | mcurrency}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="2.4">
+                    <ion-text color="medium" *ngIf="itm.refunded?.paid as paid">
+                      <div *ngIf="paid?.BAM > 0">{{ paid?.BAM | mcurrency: 'BAM' }}</div>
+                      <div *ngIf="paid?.EUR > 0">{{ paid?.EUR | mcurrency: 'EUR' }}</div>
+                      <div *ngIf="paid?.USD > 0">{{ paid?.USD | mcurrency: 'USD' }}</div>
+                      <div *ngIf="paid?.BAM === 0 && paid?.EUR === 0 && paid?.USD === 0">-</div>
+                    </ion-text>
+                  </ion-col>
+                </ion-row>
+                <ion-row class="stat-num">
+                  <ion-col size="2.4">
+                    <ion-text color="dark">
+                      {{'all' | translate}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="2.4">
+                    <ion-text color="dark">
+                      {{itm.all.count}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="2.4">
+                    <ion-text color="dark">
+                      {{itm.all.total | mcurrency}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="2.4">
+                    <ion-text color="dark">
+                      {{itm.all.revenue | mcurrency}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="2.4">
+                    <ion-text color="dark" *ngIf="itm.all?.paid as paid">
+                      <div *ngIf="paid?.BAM > 0">{{ paid?.BAM | mcurrency: 'BAM' }}</div>
+                      <div *ngIf="paid?.EUR > 0">{{ paid?.EUR | mcurrency: 'EUR' }}</div>
+                      <div *ngIf="paid?.USD > 0">{{ paid?.USD | mcurrency: 'USD' }}</div>
+                      <div *ngIf="paid?.BAM === 0 && paid?.EUR === 0 && paid?.USD === 0">-</div>
+                    </ion-text>
+                  </ion-col>
+                </ion-row>
+              </div>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+        <ion-col size="12" *ngIf="stats?.cars_orders as cars_orders">
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title>{{'car_orders' | translate}}</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <div>
+                <ion-row class="header-row">
+                  <ion-col size="3">
+                    <ion-text color="dark">
+                      {{'car' | translate}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="3">
+                    <ion-text color="dark">
+                      {{'count' | translate}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="3">
+                    <ion-text color="dark">
+                      {{'total' | translate}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="3">
+                    <ion-text color="dark">
+                      {{'revenue' | translate}}
+                    </ion-text>
+                  </ion-col>
+                </ion-row>
+                <ion-row class="stat-num" *ngFor="let itm of cars_orders">
+                  <ion-col size="3">
+                    <ion-text color="primary">
+                      {{itm?.product?.name}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="3">
+                    <ion-text color="dark">
+                      {{itm?.count}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="3">
+                    <ion-text color="secondary">
+                      {{itm?.total | mcurrency}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="3">
+                    <ion-text color="success">
+                      {{itm?.total - itm?.cost | mcurrency}}
+                    </ion-text>
+                  </ion-col>
+                </ion-row>
+              </div>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+        <ion-col size="12" *ngIf="stats?.accommodations_orders as accommodations_orders">
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title>{{'accommmodation_orders' | translate}}</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <div>
+                <ion-row class="header-row">
+                  <ion-col size="3">
+                    <ion-text color="dark">
+                      {{'accommodation' | translate}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="3">
+                    <ion-text color="dark">
+                      {{'count' | translate}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="3">
+                    <ion-text color="dark">
+                      {{'total' | translate}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="3">
+                    <ion-text color="dark">
+                      {{'revenue' | translate}}
+                    </ion-text>
+                  </ion-col>
+                </ion-row>
+                <ion-row class="stat-num" *ngFor="let itm of accommodations_orders">
+                  <ion-col size="3">
+                    <ion-text color="primary">
+                      {{itm?.product?.name}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="3">
+                    <ion-text color="dark">
+                      {{itm?.count}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="3">
+                    <ion-text color="secondary">
+                      {{itm?.total | mcurrency}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="3">
+                    <ion-text color="success">
+                      {{itm?.total - itm?.cost | mcurrency}}
+                    </ion-text>
+                  </ion-col>
+                </ion-row>
+              </div>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+        <ion-col size="12" *ngIf="stats?.drivers_orders as drivers_orders">
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title>{{'driver_orders' | translate}}</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <div>
+                <ion-row class="header-row">
+                  <ion-col size="3">
+                    <ion-text color="dark">
+                      {{'driver' | translate}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="3">
+                    <ion-text color="dark">
+                      {{'count' | translate}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="3">
+                    <ion-text color="dark">
+                      {{'total' | translate}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="3">
+                    <ion-text color="dark">
+                      {{'revenue' | translate}}
+                    </ion-text>
+                  </ion-col>
+                </ion-row>
+                <ion-row class="stat-num" *ngFor="let itm of drivers_orders">
+                  <ion-col size="3">
+                    <ion-text color="primary">
+                      {{itm?.product?.name}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="3">
+                    <ion-text color="dark">
+                      {{itm?.count}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="3">
+                    <ion-text color="secondary">
+                      {{itm?.total | mcurrency}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="3">
+                    <ion-text color="success">
+                      {{itm?.total - itm?.cost | mcurrency}}
+                    </ion-text>
+                  </ion-col>
+                </ion-row>
+              </div>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-col>
+    <ion-col size="3">
+      <ion-row>
+        <ion-col size="12" *ngIf="stats?.users as itm">
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title>{{'users' | translate}}</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <div>
+                <ion-row class="stat-num">
+                  <ion-col size="6">
+                    <ion-text color="dark">
+                      {{'active' | translate}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="6">
+                    <ion-text color="primary">
+                      {{itm.active}} / {{itm.all}}
+                    </ion-text>
+                  </ion-col>
+                </ion-row>
+                <ion-row class="stat-num">
+                  <ion-col size="6">
+                    <ion-text color="dark">
+                      {{'inactive' | translate}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="6">
+                    <ion-text color="danger">
+                      {{itm.inactive}} / {{itm.all}}
+                    </ion-text>
+                  </ion-col>
+                </ion-row>
+              </div>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-col>
+  </ion-row>
 </ion-content>

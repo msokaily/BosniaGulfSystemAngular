@@ -18,8 +18,8 @@ import { EVENTS, EventsService } from '../services/events/events.service';
 export class LoginPage implements OnInit {
 
   form = new FormGroup({
-    email: new FormControl('msokaily92@gmail.com', [Validators.required, Validators.email]),
-    password: new FormControl('123456', Validators.required)
+    email: new FormControl('', [Validators.required, Validators.email]),
+    password: new FormControl('', Validators.required)
   });
 
   showPassword = false;
@@ -71,7 +71,7 @@ export class LoginPage implements OnInit {
     values = this.form.value;
     this.api.login(values).subscribe({
       next: async (response) => {
-      console.log('Login successfully', response);
+      // console.log('Login successfully', response);
       this.loading(true);
       const user = response.data;
       this.loginUser(user);
@@ -95,7 +95,7 @@ export class LoginPage implements OnInit {
         if (msgs?.length > 0) {
           res = `<ul>${msgs.join()}</ul>`;
         } else {
-          res = error.error?.message;
+          res = error.error?.message || error.error?.data?.message;
         }
       }
       this.shared.alert({

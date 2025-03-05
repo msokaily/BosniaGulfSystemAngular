@@ -13,6 +13,14 @@ import { Observable, from } from 'rxjs';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { LanguageSwitchPageModule } from './language-switch/language-switch.module';
+import { SharedModule } from './services/shared.module';
+
+import { IonRangeCalendarModule } from "@googlproxer/ion-range-calendar";
+
+import { OneSignal } from 'onesignal-ngx';
+
+import { FlatpickrModule } from 'angularx-flatpickr';
+import { FormsModule } from '@angular/forms';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18ns/', '.json');
@@ -37,13 +45,20 @@ export class CustomTranslateLoader implements TranslateLoader {
         useClass: CustomTranslateLoader
       }
     }),
+    FormsModule,
+    FlatpickrModule.forRoot(),
     AppRoutingModule,
     GoogleMapsModule,
     HttpClientModule,
     NgxDatatableModule,
     LanguageSwitchPageModule,
+    IonRangeCalendarModule,
+    SharedModule
   ],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+  providers: [
+    {provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    OneSignal
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule { }

@@ -50,8 +50,10 @@ export class PartnersPage implements OnInit {
   }
 
   async add(data?: any, errors?: any) {
+    const loading = await this.shared.loading({message: await this.shared.trans('common.loading')});
     const constants = await this.api.constants();
     const partnersTypes = await this.shared.trans(["cars", "accommodations"]);
+    loading.dismiss();
     const inputs: CustomInput[] = [
       {
         name: 'name',
@@ -96,7 +98,9 @@ export class PartnersPage implements OnInit {
     pop.onDidDismiss().then(async v => {
       this.randomToken = Math.random() * 1000;
       if (v.role === 'success') {
+        const loading = await this.shared.loading({message: await this.shared.trans('common.saving')});
         const resp = await this.api.partnersCreate(v.data);
+        loading.dismiss();
         if (!resp?.status) {
           this.add(v.data, resp?.data?.errors);
         }
@@ -152,8 +156,9 @@ export class PartnersPage implements OnInit {
     pop.onDidDismiss().then(async v => {
       this.randomToken = Math.random() * 1000;
       if (v.role === 'success') {
+        const loading = await this.shared.loading({message: await this.shared.trans('common.saving')});
         const resp = await this.api.partnersUpdate(this.items[index]?.id, v.data);
-        console.log({resp});
+        loading.dismiss();
         if (!resp?.status) {
           this.edit(index, v.data, resp?.data?.errors);
         }
@@ -178,7 +183,7 @@ export class PartnersPage implements OnInit {
           text: trans['common.yes'],
           handler: async () => {
             const item = this.items[index];
-            this.items.splice(index, 1);
+            this.items = this.items.filter(v => v.id !== item.id);
             this.api.partnersDelete(item?.id);
             this.shared.toast({message: trans['common.remove-success'], color: 'success', duration: 1500});
           }

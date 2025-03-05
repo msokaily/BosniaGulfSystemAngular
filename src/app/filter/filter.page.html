@@ -20,17 +20,17 @@
       <ion-item lines="none">
         <ion-label class="custom-label">{{filter.title}}</ion-label>
         <ion-datetime-button [datetime]="filter.name">
-          <div slot="date-target">{{ filter?.value === undefined ? ('select_date' | translate) : filter?.value | date: 'YYYY-MM-dd' }}</div>
+          <div slot="date-target">{{ filter?.value === undefined ? ('select_date' | translate) : filter?.value | date: filter.format }}</div>
         </ion-datetime-button>
         <ion-modal [keepContentsMounted]="true">
           <ng-template>
             <ion-datetime [id]="filter.name" [(ngModel)]="filter.value" [doneText]="'common.ok' | translate"
               [cancelText]="'common.cancel' | translate"
-              [presentation]="'date'"
+              [presentation]="getFormat(filter)"
               [showDefaultButtons]="true"
               [showDefaultTitle]="true"
               [required]="filter?.required ?? false"
-              [max]="3000-12-30"
+              [max]="filter.max || 3000-12-30"
               [showClearButton]="true"
               [clearText]="'common.clear' | translate"></ion-datetime>
           </ng-template>

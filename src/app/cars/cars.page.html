@@ -11,15 +11,15 @@
       <ion-button (click)="openFilter()">
         <ion-icon slot="icon-only" name="options"></ion-icon>
       </ion-button>
-      <ion-button (click)="add()">
+      <ion-button *ngIf="pageName | can: ['create']" (click)="add()">
         <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <ion-spinner *ngIf="loadingIndicator" class="loading-spinner"></ion-spinner>
+<ion-content>
+  <ion-spinner *ngIf="loadingIndicator" class="my-loading-spinner"></ion-spinner>
   <ngx-datatable
     class="bootstrap fullscreen"
     [columnMode]="ColumnMode.force"
@@ -33,10 +33,10 @@
     [loadingIndicator]="loadingIndicator">
     <ngx-datatable-column [name]="'actions' | translate" [sortable]="false" [width]="90">
       <ng-template let-rowIndex="rowIndex" ngx-datatable-cell-template>
-        <ion-button (click)="edit(rowIndex)" size="small" class="square-btn" color="dark" fill="outline">
+        <ion-button *ngIf="pageName | can: ['update']" (click)="edit(rowIndex)" size="small" class="square-btn" color="dark" fill="outline">
           <ion-icon slot="icon-only" name="create"></ion-icon>
         </ion-button>
-        <ion-button (click)="remove(rowIndex)" size="small" class="square-btn" color="danger" fill="outline">
+        <ion-button *ngIf="pageName | can: ['delete']" (click)="remove(rowIndex)" size="small" class="square-btn" color="danger" fill="outline">
           <ion-icon slot="icon-only" name="trash"></ion-icon>
         </ion-button>
       </ng-template>
@@ -61,6 +61,13 @@
     <ngx-datatable-column [name]="'register_no' | translate" prop="register_no" [width]="100"></ngx-datatable-column>
     <ngx-datatable-column [name]="'register_start' | translate" prop="register_start" [width]="100"></ngx-datatable-column>
     <ngx-datatable-column [name]="'register_end' | translate" prop="register_end" [width]="100"></ngx-datatable-column>
+    <ngx-datatable-column [name]="'status' | translate" prop="status" [width]="100">
+      <ng-template ngx-datatable-cell-template let-value="value">
+        <div>
+          {{ value === 1 ? ('active' | translate) : ('inactive' | translate) }}
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
     <ngx-datatable-column [name]="'updated_at' | translate" prop="updated_at" [width]="100" class="ion-text-start" dir="ltr"></ngx-datatable-column>
   </ngx-datatable>
 </ion-content>

@@ -12,10 +12,10 @@
               {{user?.name}} ({{ user?.role }})
             </div>
             <div>
-              {{ 'language' | translate }}: <app-language-switch dir="ltr" style="width: 200px; margin: auto; display: inline-block;"></app-language-switch>
+              {{ 'language' | translate }}: <app-language-switch dir="ltr" style="margin: auto; display: inline-block;"></app-language-switch>
             </div>
           </div>
-          <ion-menu-toggle auto-hide="false">
+          <ion-menu-toggle auto-hide="false" *ngIf="checkPermission('home')">
             <ion-item
               routerDirection="root"
               [routerLink]="'home'"
@@ -26,11 +26,39 @@
               <ion-icon
                 aria-hidden="true"
                 slot="start"
+                name="home-outline"></ion-icon>
+              <ion-label>{{ "home" | translate }}</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+          <ion-menu-toggle auto-hide="false" *ngIf="checkPermission('calendar')">
+            <ion-item
+              routerDirection="root"
+              [routerLink]="'calendar'"
+              lines="none"
+              detail="false"
+              routerLinkActive="selected">
+              <ion-icon
+                aria-hidden="true"
+                slot="start"
+                name="calendar-outline"></ion-icon>
+              <ion-label>{{ "orders-calendar" | translate }}</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+          <ion-menu-toggle auto-hide="false" *ngIf="checkPermission('orders')">
+            <ion-item
+              routerDirection="root"
+              [routerLink]="'orders'"
+              lines="none"
+              detail="false"
+              routerLinkActive="selected">
+              <ion-icon
+                aria-hidden="true"
+                slot="start"
                 name="list"></ion-icon>
               <ion-label>{{ "orders" | translate }}</ion-label>
             </ion-item>
           </ion-menu-toggle>
-          <ion-menu-toggle auto-hide="false">
+          <ion-menu-toggle auto-hide="false" *ngIf="checkPermission('cars')">
             <ion-item
               routerDirection="root"
               [routerLink]="'cars'"
@@ -44,7 +72,35 @@
               <ion-label>{{ "cars" | translate }}</ion-label>
             </ion-item>
           </ion-menu-toggle>
-          <ion-menu-toggle auto-hide="false">
+          <ion-menu-toggle auto-hide="false" *ngIf="checkPermission('car-companies')">
+            <ion-item
+              routerDirection="root"
+              [routerLink]="'car-companies'"
+              lines="none"
+              detail="false"
+              routerLinkActive="selected">
+              <ion-icon
+                aria-hidden="true"
+                slot="start"
+                name="car-outline"></ion-icon>
+              <ion-label>{{ "car-companies" | translate }}</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+          <ion-menu-toggle auto-hide="false" *ngIf="checkPermission('accommodations')">
+            <ion-item
+              routerDirection="root"
+              [routerLink]="'accommodations'"
+              lines="none"
+              detail="false"
+              routerLinkActive="selected">
+              <ion-icon
+                aria-hidden="true"
+                slot="start"
+                name="home-outline"></ion-icon>
+              <ion-label>{{ "accommodations" | translate }}</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+          <ion-menu-toggle auto-hide="false" *ngIf="checkPermission('partners')">
             <ion-item
               routerDirection="root"
               [routerLink]="'partners'"
@@ -58,7 +114,49 @@
               <ion-label>{{ "partners" | translate }}</ion-label>
             </ion-item>
           </ion-menu-toggle>
-          <ion-menu-toggle auto-hide="false">
+          <ion-menu-toggle auto-hide="false" *ngIf="checkPermission('drivers')">
+            <ion-item
+              routerDirection="root"
+              [routerLink]="'drivers'"
+              lines="none"
+              detail="false"
+              routerLinkActive="selected">
+              <ion-icon
+                aria-hidden="true"
+                slot="start"
+                name="people-circle-outline"></ion-icon>
+              <ion-label>{{ "drivers" | translate }}</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+          <ion-menu-toggle auto-hide="false" *ngIf="checkPermission('extra-services')">
+            <ion-item
+              routerDirection="root"
+              [routerLink]="'extra-services'"
+              lines="none"
+              detail="false"
+              routerLinkActive="selected">
+              <ion-icon
+                aria-hidden="true"
+                slot="start"
+                name="bookmarks-outline"></ion-icon>
+              <ion-label>{{ "extra-services" | translate }}</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+          <ion-menu-toggle auto-hide="false" *ngIf="checkPermission('repairs')">
+            <ion-item
+              routerDirection="root"
+              [routerLink]="'repairs'"
+              lines="none"
+              detail="false"
+              routerLinkActive="selected">
+              <ion-icon
+                aria-hidden="true"
+                slot="start"
+                name="hammer-outline"></ion-icon>
+              <ion-label>{{ "repairs" | translate }}</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+          <ion-menu-toggle auto-hide="false" *ngIf="checkPermission('users')">
             <ion-item
               routerDirection="root"
               [routerLink]="'users'"

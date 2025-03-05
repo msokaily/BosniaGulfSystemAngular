@@ -20,10 +20,19 @@
     </ion-list>
   </div>
   <div *ngFor="let input of inputs">
-    <div class="custom-input" *ngIf="['text', 'email', 'password'].includes(input.type)">
+    <div class="custom-input" *ngIf="['text', 'email', 'password', 'number'].includes(input.type)">
       <ion-item lines="none">
         <ion-input [type]="input.type" [label]="input.title" [required]="input?.required ?? false"
-          labelPlacement="floating" [(ngModel)]="form[input.name]"></ion-input>
+          labelPlacement="floating" [(ngModel)]="form[input.name]"
+          (ionChange)="input?.changed ? input?.changed($event) : null" [min]="input?.min || null" [max]="input?.max || null" [readonly]="input?.readonly ?? false"></ion-input>
+      </ion-item>
+      <ion-note *ngIf="input?.note" class="ion-padding-start" color="warning">{{input.note}}</ion-note>
+    </div>
+    <div class="custom-input" *ngIf="['textarea'].includes(input.type)">
+      <ion-item lines="none">
+        <ion-textarea [label]="input.title" [required]="input?.required ?? false"
+          labelPlacement="stacked" [(ngModel)]="form[input.name]"
+          (ionChange)="input?.changed ? input?.changed($event) : null"></ion-textarea>
       </ion-item>
       <ion-note *ngIf="input?.note" class="ion-padding-start" color="warning">{{input.note}}</ion-note>
     </div>
@@ -31,8 +40,9 @@
       <ion-item lines="none">
         <ion-select [label]="input.title" labelPlacement="fixed" [(ngModel)]="form[input.name]"
           [multiple]="input?.multiple" [placeholder]="('select' | translate) + ' ' +input.title"
-          [interface]="input?.multiple ? 'alert' : 'popover'" [okText]="'common.select' | translate"
-          [cancelText]="'common.cancel' | translate" [required]="input?.required ?? false">
+          [interface]="input?.multiple ? 'alert' : 'alert'" [okText]="'common.select' | translate"
+          [cancelText]="'common.cancel' | translate" [required]="input?.required ?? false"
+          (ionChange)="input?.changed ? input?.changed($event) : null">
           <ion-select-option *ngFor="let opt of input?.options" [value]="opt?.id">{{ opt?.name }}</ion-select-option>
         </ion-select>
       </ion-item>
@@ -40,22 +50,33 @@
     <div class="custom-input" *ngIf="input.type === 'date'">
       <ion-item lines="none">
         <ion-label class="custom-label">{{input.title}}</ion-label>
-        <ion-datetime-button [datetime]="input.name">
+        <ion-datetime-button [datetime]="dateFieldsPrefix + input.name">
           <!-- <ion-icon name="calendar" slot="date-target" *ngIf="!form[input.name]"></ion-icon> -->
           <div slot="date-target">{{ form[input.name] | date: (input?.format || 'YYYY-MM-dd') }}</div>
         </ion-datetime-button>
         <ion-modal [keepContentsMounted]="true">
           <ng-template>
-            <ion-datetime [id]="input.name" [(ngModel)]="form[input.name]" [doneText]="'common.ok' | translate"
+            <ion-datetime [id]="dateFieldsPrefix + input.name" [(ngModel)]="form[input.name]" [doneText]="'common.ok' | translate"
               [cancelText]="'common.cancel' | translate" [presentation]="'date'" [showDefaultButtons]="true"
-              [showDefaultTitle]="true" [required]="input?.required ?? false" [max]="3000-12-30"></ion-datetime>
+              [showDefaultTitle]="true" [required]="input?.required ?? false" [max]="3000-12-30"
+              (ionChange)="changedAA($event)"></ion-datetime>
           </ng-template>
         </ion-modal>
       </ion-item>
     </div>
+    <div class="custom-input" *ngIf="input.type === 'dateRange'">
+      <ion-item lines="none">
+        <ion-label class="custom-label">{{input.title}}</ion-label>
+        <ion-button color="medium" (click)="openDateRange(input)" expand="block" fill="outline" shape="round" class="calender-btn">
+          <!-- <ion-icon name="calendar-outline" slot="start"></ion-icon> -->
+          <span [innerHTML]="form[input.name]?.from?.string && form[input.name]?.to?.string ? printDateRange(input) : ('choose_date' | translate) | safeHtml"></span>
+        </ion-button>
+        <!-- <ion-range-calendar #dateRangeItem [id]="input.name" [options]="tempDateRangeOptions[input.name] || getRangeOptions(input)" (select)="selectDateRangeSelected($event, input, dateRangeItem)" [type]="'js-date'" [format]="'yyyy-MM-dd'"></ion-range-calendar> -->
+      </ion-item>
+    </div>
     <div class="custom-input" *ngIf="input.type === 'file'">
       <ion-item lines="none">
-        <ion-input type="file" [label]="input.title" (ionChange)="fileChanged($event.detail, input.name)"
+        <ion-input type="file" [label]="input.title" (ionChange)="fileChanged($event.detail, input.name, input)"
           labelPlacement="fixed" [required]="input?.required ?? false"></ion-input>
       </ion-item>
       <ion-item lines="none" *ngIf="input?.value" style="--padding-bottom: 5px; --padding-top: 5px;">

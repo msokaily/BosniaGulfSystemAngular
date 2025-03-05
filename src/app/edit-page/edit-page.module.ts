@@ -10,6 +10,9 @@ import { EditPagePage } from './edit-page.page';
 import { TranslateModule } from '@ngx-translate/core';
 import { SharedModule } from '../services/shared.module';
 
+import { IonRangeCalendarModule } from "@googlproxer/ion-range-calendar";
+import { FlatpickrModule } from 'angularx-flatpickr';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -17,6 +20,8 @@ import { SharedModule } from '../services/shared.module';
     IonicModule,
     EditPagePageRoutingModule,
     TranslateModule,
+    IonRangeCalendarModule,
+    FlatpickrModule,
     SharedModule
   ],
   declarations: [EditPagePage]

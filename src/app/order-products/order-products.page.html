@@ -1,0 +1,232 @@
+<div>
+  <div class="title">
+    <h2>{{ "reserves & payments" | translate }}</h2>
+    <ion-button *ngIf="productType === 'payment' && canEdit" (click)="addPayment()" class="ion-margin-start" size="small">
+      <ion-icon slot="icon-only" name="add"></ion-icon>
+    </ion-button>
+    <ion-button *ngIf="productType !== 'payment' && canEdit" (click)="add()" class="ion-margin-start" size="small">
+      <ion-icon slot="icon-only" name="add"></ion-icon>
+    </ion-button>
+  </div>
+  <div class="types" *ngIf="constants?.product_types && productType">
+    <ion-segment [(ngModel)]="productType">
+      <ion-segment-button [value]="product_type" *ngFor="let product_type of (constants?.product_types || [])">
+        <ion-label>{{ product_type+'s' | translate }}</ion-label>
+      </ion-segment-button>
+      <ion-segment-button [value]="'payment'">
+        <ion-label>{{ 'payments' | translate }}</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+  <ion-spinner *ngIf="loadingIndicator" class="my-loading-spinner"></ion-spinner>
+  <ngx-datatable *ngIf="productType === 'car'" class="bootstrap fullscreen" [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="0"
+    [rowHeight]="'auto'" [scrollbarV]="false" [scrollbarH]="true" [rows]="carsItems"
+    [messages]="{ emptyMessage: '<h1 class=ion-text-center>'+('empty_data' | translate)+'</h1>' }"
+    [loadingIndicator]="loadingIndicator">
+    <ngx-datatable-column *ngIf="canEdit" [name]="'actions' | translate" [sortable]="false" [width]="90">
+      <ng-template let-rowIndex="rowIndex" let-row="row" ngx-datatable-cell-template>
+        <ion-button (click)="edit(row?.id)" size="small" class="square-btn" color="dark" fill="outline">
+          <ion-icon slot="icon-only" name="create"></ion-icon>
+        </ion-button>
+        <ion-button (click)="remove(row?.id)" size="small" class="square-btn" color="danger" fill="outline">
+          <ion-icon slot="icon-only" name="trash"></ion-icon>
+        </ion-button>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column [name]="'no.' | translate" [width]="40" [sortable]="false"><ng-template let-rowIndex="rowIndex" ngx-datatable-cell-template>{{rowIndex + 1}}</ng-template></ngx-datatable-column>
+    <ngx-datatable-column [name]="'id' | translate" prop="id" [width]="40" [sortable]="false"></ngx-datatable-column>
+    <ngx-datatable-column [name]="'image' | translate" prop="product?.image" [width]="60">
+      <ng-template ngx-datatable-cell-template let-value="value">
+        <img [src]="value" onerror="this.src = 'assets/imgs/car-default.png'" width="40px" height="40px" />
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column [name]="'name' | translate" prop="product.name" [width]="100"></ngx-datatable-column>
+    <ngx-datatable-column [name]="'start_at' | translate" prop="start_at" [width]="100">
+      <ng-template ngx-datatable-cell-template let-value="value">
+        <div class="fix-dir">
+          {{ (value | date: 'Y-MM-dd') || '-' }}
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column [name]="'end_at' | translate" prop="end_at" [width]="100">
+      <ng-template ngx-datatable-cell-template let-value="value">
+        <div class="fix-dir">
+          {{ (value | date: 'Y-MM-dd') || '-' }}
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column [name]="'price' | translate" prop="price" [width]="70">
+      <ng-template ngx-datatable-cell-template let-value="value">
+        <div class="fix-dir">
+          {{ value | mcurrency }}
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column [name]="'cost' | translate" prop="cost" [width]="70">
+      <ng-template ngx-datatable-cell-template let-value="value">
+        <div class="fix-dir">
+          {{ value | mcurrency }}
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column [name]="'total' | translate" prop="total" [width]="70">
+      <ng-template ngx-datatable-cell-template let-value="value">
+        <div class="fix-dir">
+          {{ value | mcurrency }}
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column [name]="'updated_at' | translate" prop="updated_at" [width]="100" class="ion-text-start" dir="ltr"></ngx-datatable-column>
+    <ngx-datatable-column [name]="'created_at' | translate" prop="created_at" [width]="100" class="ion-text-start" dir="ltr"></ngx-datatable-column>
+  </ngx-datatable>
+  <ngx-datatable *ngIf="productType === 'accommodation'" class="bootstrap fullscreen" [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="0"
+    [rowHeight]="'auto'" [scrollbarV]="false" [scrollbarH]="true" [rows]="accommodationsItems"
+    [messages]="{ emptyMessage: '<h1 class=ion-text-center>'+('empty_data' | translate)+'</h1>' }"
+    [loadingIndicator]="loadingIndicator">
+    <ngx-datatable-column *ngIf="canEdit" [name]="'actions' | translate" [sortable]="false" [width]="90">
+      <ng-template let-rowIndex="rowIndex" let-row="row" ngx-datatable-cell-template>
+        <ion-button (click)="edit(row?.id)" size="small" class="square-btn" color="dark" fill="outline">
+          <ion-icon slot="icon-only" name="create"></ion-icon>
+        </ion-button>
+        <ion-button (click)="remove(row?.id)" size="small" class="square-btn" color="danger" fill="outline">
+          <ion-icon slot="icon-only" name="trash"></ion-icon>
+        </ion-button>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column [name]="'no.' | translate" [width]="40" [sortable]="false"><ng-template let-rowIndex="rowIndex" ngx-datatable-cell-template>{{rowIndex + 1}}</ng-template></ngx-datatable-column>
+    <ngx-datatable-column [name]="'id' | translate" prop="id" [width]="40" [sortable]="false"></ngx-datatable-column>
+    <ngx-datatable-column [name]="'name' | translate" prop="product.name" [width]="100"></ngx-datatable-column>
+    <ngx-datatable-column [name]="'start_at' | translate" prop="start_at" [width]="100">
+      <ng-template ngx-datatable-cell-template let-value="value">
+        <div class="fix-dir">
+          {{ (value | date: 'Y-MM-dd') || '-' }}
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column [name]="'end_at' | translate" prop="end_at" [width]="100">
+      <ng-template ngx-datatable-cell-template let-value="value">
+        <div class="fix-dir">
+          {{ (value | date: 'Y-MM-dd') || '-' }}
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column [name]="'price' | translate" prop="price" [width]="70">
+      <ng-template ngx-datatable-cell-template let-value="value">
+        <div class="fix-dir">
+          {{ value | mcurrency }}
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column [name]="'cost' | translate" prop="cost" [width]="70">
+      <ng-template ngx-datatable-cell-template let-value="value">
+        <div class="fix-dir">
+          {{ value | mcurrency }}
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column [name]="'total' | translate" prop="total" [width]="70">
+      <ng-template ngx-datatable-cell-template let-value="value">
+        <div class="fix-dir">
+          {{ value | mcurrency }}
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column [name]="'updated_at' | translate" prop="updated_at" [width]="100" class="ion-text-start" dir="ltr"></ngx-datatable-column>
+    <ngx-datatable-column [name]="'created_at' | translate" prop="created_at" [width]="100" class="ion-text-start" dir="ltr"></ngx-datatable-column>
+  </ngx-datatable>
+  <ngx-datatable *ngIf="productType === 'driver'" class="bootstrap fullscreen" [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="0"
+    [rowHeight]="'auto'" [scrollbarV]="false" [scrollbarH]="true" [rows]="driversItems"
+    [messages]="{ emptyMessage: '<h1 class=ion-text-center>'+('empty_data' | translate)+'</h1>' }"
+    [loadingIndicator]="loadingIndicator">
+    <ngx-datatable-column *ngIf="canEdit" [name]="'actions' | translate" [sortable]="false" [width]="90">
+      <ng-template let-rowIndex="rowIndex" let-row="row" ngx-datatable-cell-template>
+        <ion-button (click)="edit(row?.id)" size="small" class="square-btn" color="dark" fill="outline">
+          <ion-icon slot="icon-only" name="create"></ion-icon>
+        </ion-button>
+        <ion-button (click)="remove(row?.id)" size="small" class="square-btn" color="danger" fill="outline">
+          <ion-icon slot="icon-only" name="trash"></ion-icon>
+        </ion-button>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column [name]="'no.' | translate" [width]="40" [sortable]="false"><ng-template let-rowIndex="rowIndex" ngx-datatable-cell-template>{{rowIndex + 1}}</ng-template></ngx-datatable-column>
+    <ngx-datatable-column [name]="'id' | translate" prop="id" [width]="40" [sortable]="false"></ngx-datatable-column>
+    <ngx-datatable-column [name]="'name' | translate" prop="product.name" [width]="100"></ngx-datatable-column>
+    <ngx-datatable-column [name]="'car' | translate" prop="extra_value.name" [width]="100"></ngx-datatable-column>
+    <ngx-datatable-column [name]="'start_at' | translate" prop="start_at" [width]="100">
+      <ng-template ngx-datatable-cell-template let-value="value">
+        <div class="fix-dir">
+          {{ (value | date: 'Y-MM-dd') || '-' }}
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column [name]="'end_at' | translate" prop="end_at" [width]="100">
+      <ng-template ngx-datatable-cell-template let-value="value">
+        <div class="fix-dir">
+          {{ (value | date: 'Y-MM-dd') || '-' }}
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column [name]="'price' | translate" prop="price" [width]="70">
+      <ng-template ngx-datatable-cell-template let-value="value">
+        <div class="fix-dir">
+          {{ value | mcurrency }}
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column [name]="'cost' | translate" prop="cost" [width]="70">
+      <ng-template ngx-datatable-cell-template let-value="value">
+        <div class="fix-dir">
+          {{ value | mcurrency }}
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column [name]="'total' | translate" prop="total" [width]="70">
+      <ng-template ngx-datatable-cell-template let-value="value">
+        <div class="fix-dir">
+          {{ value | mcurrency }}
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column [name]="'updated_at' | translate" prop="updated_at" [width]="100" class="ion-text-start" class="fix-dir"></ngx-datatable-column>
+    <ngx-datatable-column [name]="'created_at' | translate" prop="created_at" [width]="100" class="ion-text-start" class="fix-dir"></ngx-datatable-column>
+  </ngx-datatable>
+  <ngx-datatable *ngIf="productType === 'payment'" class="bootstrap fullscreen" [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="0"
+    [rowHeight]="'auto'" [scrollbarV]="false" [scrollbarH]="true" [rows]="paymentsItems"
+    [messages]="{ emptyMessage: '<h1 class=ion-text-center>'+('empty_data' | translate)+'</h1>' }"
+    [loadingIndicator]="loadingIndicator">
+    <ngx-datatable-column *ngIf="canEdit" [name]="'actions' | translate" [sortable]="false" [width]="90">
+      <ng-template let-rowIndex="rowIndex" let-row="row" ngx-datatable-cell-template>
+        <ion-button (click)="editPayment(row?.id)" size="small" class="square-btn" color="dark" fill="outline">
+          <ion-icon slot="icon-only" name="create"></ion-icon>
+        </ion-button>
+        <ion-button (click)="removePayment(row?.id)" size="small" class="square-btn" color="danger" fill="outline">
+          <ion-icon slot="icon-only" name="trash"></ion-icon>
+        </ion-button>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column [name]="'no.' | translate" [width]="40" [sortable]="false"><ng-template let-rowIndex="rowIndex" ngx-datatable-cell-template>{{rowIndex + 1}}</ng-template></ngx-datatable-column>
+    <ngx-datatable-column [name]="'id' | translate" prop="id" [width]="40" [sortable]="false"></ngx-datatable-column>
+    <ngx-datatable-column [name]="'amount' | translate" prop="amount" [width]="70">
+      <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
+        <div class="fix-dir">
+          {{ value | mcurrency: row?.currency }}
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column [name]="'paid_at' | translate" prop="paid_at" [width]="100">
+      <ng-template ngx-datatable-cell-template let-value="value">
+        <div class="fix-dir">
+          {{ (value | date: 'Y-MM-dd') || '-' }}
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column [name]="'type' | translate" prop="type" [width]="100" [sortable]="false">
+      <ng-template ngx-datatable-cell-template let-value="value">{{value | translate}}</ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column [name]="'note' | translate" prop="note" [width]="100" [sortable]="false">
+      <ng-template ngx-datatable-cell-template let-value="value">{{value || '-'}}</ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column [name]="'updated_at' | translate" prop="updated_at" [width]="100" class="ion-text-start fix-dir"></ngx-datatable-column>
+    <ngx-datatable-column [name]="'created_at' | translate" prop="created_at" [width]="100" class="ion-text-start fix-dir"></ngx-datatable-column>
+  </ngx-datatable>
+</div>

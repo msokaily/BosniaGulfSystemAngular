@@ -7,7 +7,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
-import { timeout } from 'rxjs/operators';
+import { retry, timeout } from 'rxjs/operators';
 import { AuthenticationService } from '../authentication/authentication.service';
 
 @Injectable({
@@ -30,12 +30,13 @@ export class ApiService {
 
   login(params: any): Observable<any> {
     params.language = this.language;
-    return this.http.post(this.apiUrl + 'login', params).pipe(timeout(this.timeout));
+    return this.http.post(this.apiUrl + 'login', params).pipe(timeout(this.timeout), retry(2));
   }
 
   logout(params: any = {}): Observable<any> {
     params.language = this.language;
-    return this.http.post(this.apiUrl + 'logout', params, {
+    return this.http.get(this.apiUrl + 'logout', {
+      params,
       headers: { 'Authorization': 'Bearer ' + this.authService.getToken() }
     }).pipe(timeout(this.timeout));
   }
@@ -70,7 +71,266 @@ export class ApiService {
       return false;
     }
   }
-  
+
+  //==============
+  // stats
+  //==============
+  async stats(params: any = {}): Promise<any> {
+    params.language = this.language;
+    params = this.fixArrayParams(params);
+    try {
+      const resp: any = await firstValueFrom(this.http.get(this.apiUrl + 'stats', {
+        params, headers: {
+          'Authorization': 'Bearer ' + this.authService.getToken()
+        }
+      }).pipe(timeout(this.timeout), retry(2)));
+      if (resp?.status) {
+        return resp?.data;
+      }
+      return false;
+    } catch (error) {
+      return false;
+    }
+  }
+
+
+  //==============
+  // orders
+  //==============
+  async orders(params: any = {}): Promise<any> {
+    params.language = this.language;
+    params = this.fixArrayParams(params);
+    try {
+      const resp: any = await firstValueFrom(this.http.get(this.apiUrl + 'orders', {
+        params, headers: {
+          'Authorization': 'Bearer ' + this.authService.getToken()
+        }
+      }).pipe(timeout(this.timeout), retry(2)));
+      if (resp?.status) {
+        return resp?.data;
+      }
+      return false;
+    } catch (error) {
+      return false;
+    }
+  }
+  async ordersView(id: number, params: any = {}): Promise<any> {
+    params.language = this.language;
+    params = this.fixArrayParams(params);
+    try {
+      const resp: any = await firstValueFrom(this.http.get(this.apiUrl + 'orders/' + id, {
+        params, headers: {
+          'Authorization': 'Bearer ' + this.authService.getToken()
+        }
+      }).pipe(timeout(this.timeout)));
+      if (resp?.status) {
+        return resp?.data;
+      }
+      return false;
+    } catch (error) {
+      return false;
+    }
+  }
+  async ordersCreate(params: any = {}): Promise<any> {
+    params.language = this.language;
+    params = this.fixArrayParams(params);
+    params = this.getFormData(params)
+    try {
+      const resp: any = await firstValueFrom(this.http.post(this.apiUrl + 'orders', params, {
+        headers: {
+          'Authorization': 'Bearer ' + this.authService.getToken()
+        }
+      }).pipe(timeout(this.timeout)));
+      return resp;
+    } catch (error: any) {
+      return error?.error;
+    }
+  }
+  async ordersUpdate(id: number, params: any = {}): Promise<any> {
+    params.language = this.language;
+    params._method = 'PUT';
+    params = this.fixArrayParams(params);
+    params = this.getFormData(params)
+    try {
+      const resp: any = await firstValueFrom(this.http.post(this.apiUrl + 'orders/' + id, params, {
+        headers: {
+          'Authorization': 'Bearer ' + this.authService.getToken()
+        }
+      }).pipe(timeout(this.timeout)));
+      return resp;
+    } catch (error: any) {
+      return error?.error;
+    }
+  }
+  async ordersDelete(id: number, params: any = {}): Promise<any> {
+    params.language = this.language;
+    const resp: any = await firstValueFrom(this.http.delete(this.apiUrl + 'orders/' + id, {
+      params, headers: {
+        'Authorization': 'Bearer ' + this.authService.getToken()
+      }
+    }).pipe(timeout(this.timeout)));
+    return resp?.status;
+  }
+  // ------------------------------
+
+  //==============
+  // order products
+  //==============
+  async orderProducts(id: number, params: any = {}): Promise<any> {
+    params.language = this.language;
+    params = this.fixArrayParams(params);
+    try {
+      const resp: any = await firstValueFrom(this.http.get(this.apiUrl + `orders/${id}/products`, {
+        params, headers: {
+          'Authorization': 'Bearer ' + this.authService.getToken()
+        }
+      }).pipe(timeout(this.timeout)));
+      if (resp?.status) {
+        return resp?.data;
+      }
+      return false;
+    } catch (error) {
+      return false;
+    }
+  }
+  async orderProductsView(id: number, params: any = {}): Promise<any> {
+    params.language = this.language;
+    params = this.fixArrayParams(params);
+    try {
+      const resp: any = await firstValueFrom(this.http.get(this.apiUrl + 'orderProducts/' + id, {
+        params, headers: {
+          'Authorization': 'Bearer ' + this.authService.getToken()
+        }
+      }).pipe(timeout(this.timeout)));
+      if (resp?.status) {
+        return resp?.data;
+      }
+      return false;
+    } catch (error) {
+      return false;
+    }
+  }
+  async orderProductsCreate(params: any = {}): Promise<any> {
+    params.language = this.language;
+    params = this.fixArrayParams(params);
+    params = this.getFormData(params)
+    try {
+      const resp: any = await firstValueFrom(this.http.post(this.apiUrl + 'orderProducts', params, {
+        headers: {
+          'Authorization': 'Bearer ' + this.authService.getToken()
+        }
+      }).pipe(timeout(this.timeout)));
+      return resp;
+    } catch (error: any) {
+      return error?.error;
+    }
+  }
+  async orderProductsUpdate(id: number, params: any = {}): Promise<any> {
+    params.language = this.language;
+    params._method = 'PUT';
+    params = this.fixArrayParams(params);
+    params = this.getFormData(params)
+    try {
+      const resp: any = await firstValueFrom(this.http.post(this.apiUrl + 'orderProducts/' + id, params, {
+        headers: {
+          'Authorization': 'Bearer ' + this.authService.getToken()
+        }
+      }).pipe(timeout(this.timeout)));
+      return resp;
+    } catch (error: any) {
+      return error?.error;
+    }
+  }
+  async orderProductsDelete(id: number, params: any = {}): Promise<any> {
+    params.language = this.language;
+    const resp: any = await firstValueFrom(this.http.delete(this.apiUrl + 'orderProducts/' + id, {
+      params, headers: {
+        'Authorization': 'Bearer ' + this.authService.getToken()
+      }
+    }).pipe(timeout(this.timeout)));
+    return resp?.status;
+  }
+  // ------------------------------
+
+    //==============
+  // order payments
+  //==============
+  async orderPayments(id: number, params: any = {}): Promise<any> {
+    params.language = this.language;
+    params = this.fixArrayParams(params);
+    try {
+      const resp: any = await firstValueFrom(this.http.get(this.apiUrl + `orders/${id}/payments`, {
+        params, headers: {
+          'Authorization': 'Bearer ' + this.authService.getToken()
+        }
+      }).pipe(timeout(this.timeout)));
+      if (resp?.status) {
+        return resp?.data;
+      }
+      return false;
+    } catch (error) {
+      return false;
+    }
+  }
+  async orderPaymentsView(id: number, params: any = {}): Promise<any> {
+    params.language = this.language;
+    params = this.fixArrayParams(params);
+    try {
+      const resp: any = await firstValueFrom(this.http.get(this.apiUrl + 'payments/' + id, {
+        params, headers: {
+          'Authorization': 'Bearer ' + this.authService.getToken()
+        }
+      }).pipe(timeout(this.timeout)));
+      if (resp?.status) {
+        return resp?.data;
+      }
+      return false;
+    } catch (error) {
+      return false;
+    }
+  }
+  async orderPaymentsCreate(params: any = {}): Promise<any> {
+    params.language = this.language;
+    params = this.fixArrayParams(params);
+    params = this.getFormData(params)
+    try {
+      const resp: any = await firstValueFrom(this.http.post(this.apiUrl + 'payments', params, {
+        headers: {
+          'Authorization': 'Bearer ' + this.authService.getToken()
+        }
+      }).pipe(timeout(this.timeout)));
+      return resp;
+    } catch (error: any) {
+      return error?.error;
+    }
+  }
+  async orderPaymentsUpdate(id: number, params: any = {}): Promise<any> {
+    params.language = this.language;
+    params._method = 'PUT';
+    params = this.fixArrayParams(params);
+    params = this.getFormData(params)
+    try {
+      const resp: any = await firstValueFrom(this.http.post(this.apiUrl + 'payments/' + id, params, {
+        headers: {
+          'Authorization': 'Bearer ' + this.authService.getToken()
+        }
+      }).pipe(timeout(this.timeout)));
+      return resp;
+    } catch (error: any) {
+      return error?.error;
+    }
+  }
+  async orderPaymentsDelete(id: number, params: any = {}): Promise<any> {
+    params.language = this.language;
+    const resp: any = await firstValueFrom(this.http.delete(this.apiUrl + 'payments/' + id, {
+      params, headers: {
+        'Authorization': 'Bearer ' + this.authService.getToken()
+      }
+    }).pipe(timeout(this.timeout)));
+    return resp?.status;
+  }
+  // ------------------------------
+
   //==============
   // Users
   //==============
@@ -136,7 +396,10 @@ export class ApiService {
   //==============
   // Cars
   //==============
-  async cars(params: any = {}): Promise<any> {
+  async cars(params: any = {}, cache = false): Promise<any> {
+    if (this.cache?.cars && cache && Object.keys(params).length == 0) {
+      return await this.cache.cars;
+    }
     params.language = this.language;
     params = this.fixArrayParams(params);
     try {
@@ -146,6 +409,7 @@ export class ApiService {
         }
       }).pipe(timeout(this.timeout)));
       if (resp?.status) {
+        this.cache.cars = resp?.data;
         return resp?.data;
       }
       return false;
@@ -214,7 +478,132 @@ export class ApiService {
     }
   }
   // ------------------------------
+
   
+  //==============
+  // repairs
+  //==============
+  async repairs(params: any = {}): Promise<any> {
+    params.language = this.language;
+    params = this.fixArrayParams(params);
+    try {
+      const resp: any = await firstValueFrom(this.http.get(this.apiUrl + 'repairs', {
+        params, headers: {
+          'Authorization': 'Bearer ' + this.authService.getToken()
+        }
+      }).pipe(timeout(this.timeout)));
+      if (resp?.status) {
+        return resp?.data;
+      }
+      return false;
+    } catch (error) {
+      return false;
+    }
+  }
+  async repairsCreate(params: any = {}): Promise<any> {
+    params.language = this.language;
+    params = this.fixArrayParams(params);
+    params = this.getFormData(params)
+    try {
+      const resp: any = await firstValueFrom(this.http.post(this.apiUrl + 'repairs', params, {
+        headers: {
+          'Authorization': 'Bearer ' + this.authService.getToken()
+        }
+      }).pipe(timeout(this.timeout)));
+      return resp;
+    } catch (error: any) {
+      return error?.error;
+    }
+  }
+  async repairsUpdate(id: number, params: any = {}): Promise<any> {
+    params.language = this.language;
+    params._method = 'PUT';
+    params = this.fixArrayParams(params);
+    params = this.getFormData(params)
+    try {
+      const resp: any = await firstValueFrom(this.http.post(this.apiUrl + 'repairs/' + id, params, {
+        headers: {
+          'Authorization': 'Bearer ' + this.authService.getToken()
+        }
+      }).pipe(timeout(this.timeout)));
+      return resp;
+    } catch (error: any) {
+      return error?.error;
+    }
+  }
+  async repairsDelete(id: number, params: any = {}): Promise<any> {
+    params.language = this.language;
+    const resp: any = await firstValueFrom(this.http.delete(this.apiUrl + 'repairs/' + id, {
+      params, headers: {
+        'Authorization': 'Bearer ' + this.authService.getToken()
+      }
+    }).pipe(timeout(this.timeout)));
+    return resp?.status;
+  }
+  // ------------------------------
+  
+  //==============
+  // extraServices
+  //==============
+  async extraServices(params: any = {}): Promise<any> {
+    params.language = this.language;
+    params = this.fixArrayParams(params);
+    try {
+      const resp: any = await firstValueFrom(this.http.get(this.apiUrl + 'extra-services', {
+        params, headers: {
+          'Authorization': 'Bearer ' + this.authService.getToken()
+        }
+      }).pipe(timeout(this.timeout)));
+      if (resp?.status) {
+        return resp?.data;
+      }
+      return false;
+    } catch (error) {
+      return false;
+    }
+  }
+  async extraServicesCreate(params: any = {}): Promise<any> {
+    params.language = this.language;
+    params = this.fixArrayParams(params);
+    params = this.getFormData(params)
+    try {
+      const resp: any = await firstValueFrom(this.http.post(this.apiUrl + 'extra-services', params, {
+        headers: {
+          'Authorization': 'Bearer ' + this.authService.getToken()
+        }
+      }).pipe(timeout(this.timeout)));
+      return resp;
+    } catch (error: any) {
+      return error?.error;
+    }
+  }
+  async extraServicesUpdate(id: number, params: any = {}): Promise<any> {
+    params.language = this.language;
+    params._method = 'PUT';
+    params = this.fixArrayParams(params);
+    params = this.getFormData(params)
+    try {
+      const resp: any = await firstValueFrom(this.http.post(this.apiUrl + 'extra-services/' + id, params, {
+        headers: {
+          'Authorization': 'Bearer ' + this.authService.getToken()
+        }
+      }).pipe(timeout(this.timeout)));
+      return resp;
+    } catch (error: any) {
+      return error?.error;
+    }
+  }
+  async extraServicesDelete(id: number, params: any = {}): Promise<any> {
+    params.language = this.language;
+    const resp: any = await firstValueFrom(this.http.delete(this.apiUrl + 'extra-services/' + id, {
+      params, headers: {
+        'Authorization': 'Bearer ' + this.authService.getToken()
+      }
+    }).pipe(timeout(this.timeout)));
+    return resp?.status;
+  }
+  // ------------------------------
+
   //==============
   // partners
   //==============
@@ -277,10 +666,208 @@ export class ApiService {
   }
   // ------------------------------
 
+  //==============
+  // Car Companies
+  //==============
+  async carCompaniesList(params: any = {}): Promise<any> {
+    params.language = this.language;
+    params = this.fixArrayParams(params);
+    try {
+      const resp: any = await firstValueFrom(this.http.get(this.apiUrl + 'car-companies', {
+        params, headers: {
+          'Authorization': 'Bearer ' + this.authService.getToken()
+        }
+      }).pipe(timeout(this.timeout)));
+      if (resp?.status) {
+        return resp?.data;
+      }
+      return false;
+    } catch (error) {
+      return false;
+    }
+  }
+  async carCompaniesCreate(params: any = {}): Promise<any> {
+    params.language = this.language;
+    params = this.fixArrayParams(params);
+    params = this.getFormData(params)
+    try {
+      const resp: any = await firstValueFrom(this.http.post(this.apiUrl + 'car-companies', params, {
+        headers: {
+          'Authorization': 'Bearer ' + this.authService.getToken()
+        }
+      }).pipe(timeout(this.timeout)));
+      return resp;
+    } catch (error: any) {
+      return error?.error;
+    }
+  }
+  async carCompaniesUpdate(id: number, params: any = {}): Promise<any> {
+    params.language = this.language;
+    params._method = 'PUT';
+    params = this.fixArrayParams(params);
+    params = this.getFormData(params)
+    try {
+      const resp: any = await firstValueFrom(this.http.post(this.apiUrl + 'car-companies/' + id, params, {
+        headers: {
+          'Authorization': 'Bearer ' + this.authService.getToken()
+        }
+      }).pipe(timeout(this.timeout)));
+      return resp;
+    } catch (error: any) {
+      return error?.error;
+    }
+  }
+  async carCompaniesDelete(id: number, params: any = {}): Promise<any> {
+    params.language = this.language;
+    const resp: any = await firstValueFrom(this.http.delete(this.apiUrl + 'car-companies/' + id, {
+      params, headers: {
+        'Authorization': 'Bearer ' + this.authService.getToken()
+      }
+    }).pipe(timeout(this.timeout)));
+    return resp?.status;
+  }
+  // ------------------------------
+
+  //==============
+  // Drivers
+  //==============
+  async drivers(params: any = {}, cache = false): Promise<any> {
+    if (this.cache?.drivers && cache && Object.keys(params).length == 0) {
+      return await this.cache.drivers;
+    }
+    params.language = this.language;
+    params = this.fixArrayParams(params);
+    try {
+      const resp: any = await firstValueFrom(this.http.get(this.apiUrl + 'drivers', {
+        params, headers: {
+          'Authorization': 'Bearer ' + this.authService.getToken()
+        }
+      }).pipe(timeout(this.timeout)));
+      if (resp?.status) {
+        this.cache.drivers = resp?.data;
+        return resp?.data;
+      }
+      return false;
+    } catch (error) {
+      return false;
+    }
+  }
+  async driversCreate(params: any = {}): Promise<any> {
+    params.language = this.language;
+    params = this.fixArrayParams(params);
+    params = this.getFormData(params)
+    try {
+      const resp: any = await firstValueFrom(this.http.post(this.apiUrl + 'drivers', params, {
+        headers: {
+          'Authorization': 'Bearer ' + this.authService.getToken()
+        }
+      }).pipe(timeout(this.timeout)));
+      return resp;
+    } catch (error: any) {
+      return error?.error;
+    }
+  }
+  async driversUpdate(id: number, params: any = {}): Promise<any> {
+    params.language = this.language;
+    params._method = 'PUT';
+    params = this.fixArrayParams(params);
+    params = this.getFormData(params)
+    try {
+      const resp: any = await firstValueFrom(this.http.post(this.apiUrl + 'drivers/' + id, params, {
+        headers: {
+          'Authorization': 'Bearer ' + this.authService.getToken()
+        }
+      }).pipe(timeout(this.timeout)));
+      return resp;
+    } catch (error: any) {
+      return error?.error;
+    }
+  }
+  async driversDelete(id: number, params: any = {}): Promise<any> {
+    params.language = this.language;
+    const resp: any = await firstValueFrom(this.http.delete(this.apiUrl + 'drivers/' + id, {
+      params, headers: {
+        'Authorization': 'Bearer ' + this.authService.getToken()
+      }
+    }).pipe(timeout(this.timeout)));
+    return resp?.status;
+  }
+  // ------------------------------
+
+  //==============
+  // Accommodations
+  //==============
+  async accommodations(params: any = {}, cache = false): Promise<any> {
+    if (this.cache?.accommodations && cache && Object.keys(params).length == 0) {
+      return await this.cache.accommodations;
+    }
+    params.language = this.language;
+    params = this.fixArrayParams(params);
+    try {
+      const resp: any = await firstValueFrom(this.http.get(this.apiUrl + 'accommodations', {
+        params, headers: {
+          'Authorization': 'Bearer ' + this.authService.getToken()
+        }
+      }).pipe(timeout(this.timeout)));
+      if (resp?.status) {
+        this.cache.accommodations = resp?.data;
+        return resp?.data;
+      }
+      return false;
+    } catch (error) {
+      return false;
+    }
+  }
+  async accommodationsCreate(params: any = {}): Promise<any> {
+    params.language = this.language;
+    params = this.fixArrayParams(params);
+    params = this.getFormData(params)
+    try {
+      const resp: any = await firstValueFrom(this.http.post(this.apiUrl + 'accommodations', params, {
+        headers: {
+          'Authorization': 'Bearer ' + this.authService.getToken()
+        }
+      }).pipe(timeout(this.timeout)));
+      return resp;
+    } catch (error: any) {
+      return error?.error;
+    }
+  }
+  async accommodationsUpdate(id: number, params: any = {}): Promise<any> {
+    params.language = this.language;
+    params._method = 'PUT';
+    params = this.fixArrayParams(params);
+    params = this.getFormData(params)
+    try {
+      const resp: any = await firstValueFrom(this.http.post(this.apiUrl + 'accommodations/' + id, params, {
+        headers: {
+          'Authorization': 'Bearer ' + this.authService.getToken()
+        }
+      }).pipe(timeout(this.timeout)));
+      return resp;
+    } catch (error: any) {
+      return error?.error;
+    }
+  }
+  async accommodationsDelete(id: number, params: any = {}): Promise<any> {
+    params.language = this.language;
+    const resp: any = await firstValueFrom(this.http.delete(this.apiUrl + 'accommodations/' + id, {
+      params, headers: {
+        'Authorization': 'Bearer ' + this.authService.getToken()
+      }
+    }).pipe(timeout(this.timeout)));
+    return resp?.status;
+  }
+  // ------------------------------
+
   uploadLicense(file: File, paramName = 'file'): Observable<any> {
     const formData = new FormData();
     formData.append(paramName, file, file.name);
     return this.http.post(this.apiUrl + 'courier-company/common/upload-file', formData);
+  }
+
+  export_orders_excel(params: any = {}) {
+    return `${this.apiUrl}orders/export_excel?api_token=${this.authService.getToken()}&locale=${this.language}${(params ? '&' : '')+Object.keys(params).map((key: any) => `${key}=${params[key]}`).join('&')}`;
   }
 
   private fixArrayParams(params: any) {

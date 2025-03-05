@@ -14,6 +14,8 @@ import { EditPagePage } from '../edit-page/edit-page.page';
 })
 export class UsersPage implements OnInit {
 
+  pageName = 'users';
+
   filterValues: any;
   items: any[] = [];
 
@@ -28,7 +30,7 @@ export class UsersPage implements OnInit {
     private api: ApiService,
     public shared: SharedService,
     private popoverCtrl: PopoverController,
-  ) { }
+  ) {}
 
   get user() {
     return this.auth.user;
@@ -50,8 +52,10 @@ export class UsersPage implements OnInit {
   }
 
   async add(data?: any, errors?: any) {
+    const loading = await this.shared.loading({message: await this.shared.trans('common.loading')});
     const constants = await this.api.constants();
     const rolesNames = await this.shared.trans(["admin", "reserver", "accountant", "monitor"]);
+    loading.dismiss();
     const inputs: CustomInput[] = [
       {
         name: 'name',
@@ -98,7 +102,9 @@ export class UsersPage implements OnInit {
     pop.onDidDismiss().then(async v => {
       this.randomToken = Math.random() * 1000;
       if (v.role === 'success') {
+        const loading = await this.shared.loading({message: await this.shared.trans('common.saving')});
         const resp = await this.api.usersCreate(v.data);
+        loading.dismiss();
         if (!resp?.status) {
           this.add(v.data, resp?.data?.errors);
         }
@@ -109,8 +115,10 @@ export class UsersPage implements OnInit {
   }
 
   async edit(index: number, data?: any, errors?: any) {
+    const loading = await this.shared.loading({message: await this.shared.trans('common.loading')});
     const constants = await this.api.constants();
     const rolesNames = await this.shared.trans(["admin", "reserver", "accountant", "monitor"]);
+    loading.dismiss();
     const inputs: CustomInput[] = [
       {
         name: 'name',
@@ -130,7 +138,7 @@ export class UsersPage implements OnInit {
         name: 'password',
         type: 'password',
         title: await this.shared.trans('common.password'),
-        value: '',
+        value: null,
         note: await this.shared.trans('leave-empty-no-change')
       },
       {
@@ -140,6 +148,22 @@ export class UsersPage implements OnInit {
         options: constants?.roles ? constants?.roles.map((v:any) => { return { id: v, name: rolesNames[v] }; }) : [],
         value: data?.role || this.items[index]?.role || null,
         required: true
+      },
+      {
+        name: 'status',
+        type: 'select',
+        title: await this.shared.trans('status'),
+        value: data?.status || parseInt(this.items[index]?.status) || 1,
+        options: [
+          {
+            id: 1,
+            name: await this.shared.trans('active')
+          },
+          {
+            id: 2,
+            name: await this.shared.trans('inactive')
+          }
+        ]
       }
     ];
     const pop = await this.popoverCtrl.create({
@@ -156,8 +180,10 @@ export class UsersPage implements OnInit {
     pop.onDidDismiss().then(async v => {
       this.randomToken = Math.random() * 1000;
       if (v.role === 'success') {
+        const loading = await this.shared.loading({message: await this.shared.trans('common.saving')});
+        // const params: any = v.data?.filter((v: any) => v != '' && v != null);
         const resp = await this.api.usersUpdate(this.items[index]?.id, v.data);
-        console.log({resp});
+        loading.dismiss();
         if (!resp?.status) {
           this.edit(index, v.data, resp?.data?.errors);
         }
@@ -182,7 +208,7 @@ export class UsersPage implements OnInit {
           text: trans['common.yes'],
           handler: async () => {
             const item = this.items[index];
-            this.items.splice(index, 1);
+            this.items = this.items.filter(v => v.id !== item.id);
             this.api.usersDelete(item?.id);
             this.shared.toast({message: trans['common.remove-success'], color: 'success', duration: 1500});
           }

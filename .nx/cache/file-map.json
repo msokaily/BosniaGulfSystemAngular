@@ -11,16 +11,20 @@
     "@angular/platform-browser": "^17.0.2",
     "@angular/platform-browser-dynamic": "^17.0.2",
     "@angular/router": "^17.0.2",
+    "@googlproxer/ion-range-calendar": "^17.0.5",
     "@ionic/angular": "^7.0.0",
     "@ionic/cordova-builders": "^11.0.0",
     "@ngx-translate/core": "^15.0.0",
     "@ngx-translate/http-loader": "^8.0.0",
     "@swimlane/ngx-datatable": "^20.1.0",
+    "angularx-flatpickr": "^7.3.0",
     "crypto-js": "^4.2.0",
+    "flatpickr": "^4.6.13",
     "ionicons": "^7.0.0",
     "jwt-decode": "^3.1.2",
     "moment": "^2.30.1",
     "ngx-ionic-image-viewer": "^0.7.5",
+    "onesignal-ngx": "^2.0.1",
     "rxjs": "~7.8.0",
     "swiper": "^8.3.2",
     "tslib": "^2.3.0",
@@ -43,6 +47,8 @@
     "eslint-plugin-import": "2.22.1",
     "eslint-plugin-jsdoc": "30.7.6",
     "eslint-plugin-prefer-arrow": "1.2.2",
+    "gulp": "^4.0.2",
+    "gulp-inline": "^0.1.3",
     "jasmine-core": "~5.1.0",
     "jasmine-spec-reporter": "~5.0.0",
     "karma": "~6.4.0",
@@ -50,7 +56,9 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "typescript": "~5.2.2"
+    "typescript": "~5.2.2",
+    "webpack": "^5.90.2",
+    "webpack-cli": "^5.1.4"
   },
   "pathMappings": {},
   "nxJsonPlugins": [],
@@ -83,11 +91,19 @@
       },
       {
         "file": "angular.json",
-        "hash": "6123937038985879152"
+        "hash": "1360038995852635244"
+      },
+      {
+        "file": "app.yaml",
+        "hash": "6069185392554404043"
       },
       {
         "file": "config.xml",
         "hash": "17819957884443311858"
+      },
+      {
+        "file": "gulpfile.js",
+        "hash": "13925341591253276902"
       },
       {
         "file": "ionic.config.json",
@@ -99,11 +115,11 @@
       },
       {
         "file": "package-lock.json",
-        "hash": "10405703370148540615"
+        "hash": "16203592069734477844"
       },
       {
         "file": "package.json",
-        "hash": "126363201720793095"
+        "hash": "11011150846163671227"
       },
       {
         "file": "resources/README.md",
@@ -394,16 +410,44 @@
         "hash": "15551334922495974415"
       },
       {
+        "file": "src/OneSignalSDKWorker.js",
+        "hash": "18360691500833965912"
+      },
+      {
+        "file": "src/app/accommodations/accommodations-routing.module.ts",
+        "hash": "6206534617782580177"
+      },
+      {
+        "file": "src/app/accommodations/accommodations.module.ts",
+        "hash": "17674887156474570859"
+      },
+      {
+        "file": "src/app/accommodations/accommodations.page.html",
+        "hash": "8551142074750220049"
+      },
+      {
+        "file": "src/app/accommodations/accommodations.page.scss",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "src/app/accommodations/accommodations.page.spec.ts",
+        "hash": "1128594012866339610"
+      },
+      {
+        "file": "src/app/accommodations/accommodations.page.ts",
+        "hash": "5202130962123026170"
+      },
+      {
         "file": "src/app/app-routing.module.ts",
-        "hash": "2628877997144294219"
+        "hash": "12100738956986236724"
       },
       {
         "file": "src/app/app.component.html",
-        "hash": "10685857684609697566"
+        "hash": "10991756302174885717"
       },
       {
         "file": "src/app/app.component.scss",
-        "hash": "9165532487268628528"
+        "hash": "17805446930568337808"
       },
       {
         "file": "src/app/app.component.spec.ts",
@@ -411,11 +455,43 @@
       },
       {
         "file": "src/app/app.component.ts",
-        "hash": "9506274874617257883"
+        "hash": "6703161809076344432"
       },
       {
         "file": "src/app/app.module.ts",
-        "hash": "8196659728107583612"
+        "hash": "15076718155876357459"
+      },
+      {
+        "file": "src/app/can.pipe.spec.ts",
+        "hash": "16789274205515004127"
+      },
+      {
+        "file": "src/app/can.pipe.ts",
+        "hash": "16689938735199392772"
+      },
+      {
+        "file": "src/app/car-companies/car-companies-routing.module.ts",
+        "hash": "6070724706114650618"
+      },
+      {
+        "file": "src/app/car-companies/car-companies.module.ts",
+        "hash": "13195694626772585181"
+      },
+      {
+        "file": "src/app/car-companies/car-companies.page.html",
+        "hash": "13338183712979918589"
+      },
+      {
+        "file": "src/app/car-companies/car-companies.page.scss",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "src/app/car-companies/car-companies.page.spec.ts",
+        "hash": "16880903409651127109"
+      },
+      {
+        "file": "src/app/car-companies/car-companies.page.ts",
+        "hash": "15257554058060739237"
       },
       {
         "file": "src/app/cars/cars-routing.module.ts",
@@ -427,7 +503,7 @@
       },
       {
         "file": "src/app/cars/cars.page.html",
-        "hash": "6507773179724947379"
+        "hash": "10184295176268355294"
       },
       {
         "file": "src/app/cars/cars.page.scss",
@@ -439,7 +515,7 @@
       },
       {
         "file": "src/app/cars/cars.page.ts",
-        "hash": "15773464767334957169"
+        "hash": "9746229864098529310"
       },
       {
         "file": "src/app/choose-time/choose-time-routing.module.ts",
@@ -466,20 +542,68 @@
         "hash": "10075158064515841106"
       },
       {
+        "file": "src/app/drivers/drivers-routing.module.ts",
+        "hash": "7636510025111076586"
+      },
+      {
+        "file": "src/app/drivers/drivers.module.ts",
+        "hash": "3806501537900275003"
+      },
+      {
+        "file": "src/app/drivers/drivers.page.html",
+        "hash": "1585943867960920325"
+      },
+      {
+        "file": "src/app/drivers/drivers.page.scss",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "src/app/drivers/drivers.page.spec.ts",
+        "hash": "5973510971088262994"
+      },
+      {
+        "file": "src/app/drivers/drivers.page.ts",
+        "hash": "5617778089918937510"
+      },
+      {
+        "file": "src/app/dynamic-form/dynamic-form-routing.module.ts",
+        "hash": "16142136550836453678"
+      },
+      {
+        "file": "src/app/dynamic-form/dynamic-form.module.ts",
+        "hash": "9989436099000283201"
+      },
+      {
+        "file": "src/app/dynamic-form/dynamic-form.page.html",
+        "hash": "3354063430473745576"
+      },
+      {
+        "file": "src/app/dynamic-form/dynamic-form.page.scss",
+        "hash": "1444370923962645657"
+      },
+      {
+        "file": "src/app/dynamic-form/dynamic-form.page.spec.ts",
+        "hash": "16014311165084470029"
+      },
+      {
+        "file": "src/app/dynamic-form/dynamic-form.page.ts",
+        "hash": "10249996977293069224"
+      },
+      {
         "file": "src/app/edit-page/edit-page-routing.module.ts",
         "hash": "2192897183581791438"
       },
       {
         "file": "src/app/edit-page/edit-page.module.ts",
-        "hash": "11591258344905068297"
+        "hash": "5753107409322189141"
       },
       {
         "file": "src/app/edit-page/edit-page.page.html",
-        "hash": "7313605443844337033"
+        "hash": "17408126105698514586"
       },
       {
         "file": "src/app/edit-page/edit-page.page.scss",
-        "hash": "1444370923962645657"
+        "hash": "8565808966213696636"
       },
       {
         "file": "src/app/edit-page/edit-page.page.spec.ts",
@@ -487,7 +611,7 @@
       },
       {
         "file": "src/app/edit-page/edit-page.page.ts",
-        "hash": "6071447157005581725"
+        "hash": "16138333895173186779"
       },
       {
         "file": "src/app/filter/filter-routing.module.ts",
@@ -499,7 +623,7 @@
       },
       {
         "file": "src/app/filter/filter.page.html",
-        "hash": "14335500297028685202"
+        "hash": "961569335579802465"
       },
       {
         "file": "src/app/filter/filter.page.scss",
@@ -511,7 +635,11 @@
       },
       {
         "file": "src/app/filter/filter.page.ts",
-        "hash": "17438771595587280887"
+        "hash": "17127326913154166703"
+      },
+      {
+        "file": "src/app/guards/CanOpenRoute.guard.ts",
+        "hash": "3064327760708207884"
       },
       {
         "file": "src/app/guards/admin/admin-auth.guard.spec.ts",
@@ -539,7 +667,7 @@
       },
       {
         "file": "src/app/guards/noauth.guard.ts",
-        "hash": "17281640171062302351"
+        "hash": "17918186149025010155"
       },
       {
         "file": "src/app/home/home-routing.module.ts",
@@ -547,15 +675,15 @@
       },
       {
         "file": "src/app/home/home.module.ts",
-        "hash": "11098750584138769975"
+        "hash": "8463908421148224453"
       },
       {
         "file": "src/app/home/home.page.html",
-        "hash": "6683812043023143239"
+        "hash": "10650989156992591202"
       },
       {
         "file": "src/app/home/home.page.scss",
-        "hash": "3244421341483603138"
+        "hash": "15358840197154450199"
       },
       {
         "file": "src/app/home/home.page.spec.ts",
@@ -563,7 +691,7 @@
       },
       {
         "file": "src/app/home/home.page.ts",
-        "hash": "7650287325605135470"
+        "hash": "2421023098229432508"
       },
       {
         "file": "src/app/language-switch/language-switch-routing.module.ts",
@@ -611,7 +739,155 @@
       },
       {
         "file": "src/app/login/login.page.ts",
-        "hash": "7902077635191547936"
+        "hash": "141211102747588679"
+      },
+      {
+        "file": "src/app/modals/popup-info/index.ts",
+        "hash": "4471934428002466698"
+      },
+      {
+        "file": "src/app/modals/popup-info/popup-info-routing.module.ts",
+        "hash": "5656157197085791528"
+      },
+      {
+        "file": "src/app/modals/popup-info/popup-info.module.ts",
+        "hash": "14845660280222697776"
+      },
+      {
+        "file": "src/app/modals/popup-info/popup-info.page.html",
+        "hash": "7530656013893511235"
+      },
+      {
+        "file": "src/app/modals/popup-info/popup-info.page.scss",
+        "hash": "7469745499046435837"
+      },
+      {
+        "file": "src/app/modals/popup-info/popup-info.page.spec.ts",
+        "hash": "5437580645709035438"
+      },
+      {
+        "file": "src/app/modals/popup-info/popup-info.page.ts",
+        "hash": "4586571726222684291"
+      },
+      {
+        "file": "src/app/not-authed/not-authed-routing.module.ts",
+        "hash": "11531545630632249154"
+      },
+      {
+        "file": "src/app/not-authed/not-authed.module.ts",
+        "hash": "4158532494087544014"
+      },
+      {
+        "file": "src/app/not-authed/not-authed.page.html",
+        "hash": "4955908826132923296"
+      },
+      {
+        "file": "src/app/not-authed/not-authed.page.scss",
+        "hash": "11328324183145333234"
+      },
+      {
+        "file": "src/app/not-authed/not-authed.page.spec.ts",
+        "hash": "8919819276000203030"
+      },
+      {
+        "file": "src/app/not-authed/not-authed.page.ts",
+        "hash": "2235910669621656318"
+      },
+      {
+        "file": "src/app/order-form/order-form-routing.module.ts",
+        "hash": "3304733244189463458"
+      },
+      {
+        "file": "src/app/order-form/order-form.module.ts",
+        "hash": "13690914796765748543"
+      },
+      {
+        "file": "src/app/order-form/order-form.page.html",
+        "hash": "2969214691121498899"
+      },
+      {
+        "file": "src/app/order-form/order-form.page.scss",
+        "hash": "748044585755352688"
+      },
+      {
+        "file": "src/app/order-form/order-form.page.spec.ts",
+        "hash": "11863109818429509966"
+      },
+      {
+        "file": "src/app/order-form/order-form.page.ts",
+        "hash": "18026284489090419972"
+      },
+      {
+        "file": "src/app/order-products/order-products-routing.module.ts",
+        "hash": "6708982683834641302"
+      },
+      {
+        "file": "src/app/order-products/order-products.module.ts",
+        "hash": "15083343248148103503"
+      },
+      {
+        "file": "src/app/order-products/order-products.page.html",
+        "hash": "11204368010162958539"
+      },
+      {
+        "file": "src/app/order-products/order-products.page.scss",
+        "hash": "13043674830241426066"
+      },
+      {
+        "file": "src/app/order-products/order-products.page.spec.ts",
+        "hash": "6388464860531204624"
+      },
+      {
+        "file": "src/app/order-products/order-products.page.ts",
+        "hash": "13580612547643730534"
+      },
+      {
+        "file": "src/app/order/order-routing.module.ts",
+        "hash": "14679465139857553180"
+      },
+      {
+        "file": "src/app/order/order.module.ts",
+        "hash": "14833715530757206445"
+      },
+      {
+        "file": "src/app/order/order.page.html",
+        "hash": "12041287185978835459"
+      },
+      {
+        "file": "src/app/order/order.page.scss",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "src/app/order/order.page.spec.ts",
+        "hash": "3196025759819123417"
+      },
+      {
+        "file": "src/app/order/order.page.ts",
+        "hash": "5069817456050638937"
+      },
+      {
+        "file": "src/app/orders/orders-routing.module.ts",
+        "hash": "6969501725080328817"
+      },
+      {
+        "file": "src/app/orders/orders.module.ts",
+        "hash": "13879729902437383941"
+      },
+      {
+        "file": "src/app/orders/orders.page.html",
+        "hash": "15818327303813764313"
+      },
+      {
+        "file": "src/app/orders/orders.page.scss",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "src/app/orders/orders.page.spec.ts",
+        "hash": "13798007068643266599"
+      },
+      {
+        "file": "src/app/orders/orders.page.ts",
+        "hash": "18026007290986544998"
       },
       {
         "file": "src/app/page404/page404-routing.module.ts",
@@ -623,7 +899,7 @@
       },
       {
         "file": "src/app/page404/page404.page.html",
-        "hash": "5596210326490888217"
+        "hash": "4856262018388311812"
       },
       {
         "file": "src/app/page404/page404.page.scss",
@@ -636,6 +912,38 @@
       {
         "file": "src/app/page404/page404.page.ts",
         "hash": "14562089168836785071"
+      },
+      {
+        "file": "src/app/partners/partners-routing.module.ts",
+        "hash": "2725374163888996612"
+      },
+      {
+        "file": "src/app/partners/partners.module.ts",
+        "hash": "16588888389206101385"
+      },
+      {
+        "file": "src/app/partners/partners.page.html",
+        "hash": "15614885394019047339"
+      },
+      {
+        "file": "src/app/partners/partners.page.scss",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "src/app/partners/partners.page.spec.ts",
+        "hash": "11354653969714326785"
+      },
+      {
+        "file": "src/app/partners/partners.page.ts",
+        "hash": "6668841955335983813"
+      },
+      {
+        "file": "src/app/pipes/capitalFirstLetter/capital-first-letter.pipe.spec.ts",
+        "hash": "16920222895423007566"
+      },
+      {
+        "file": "src/app/pipes/capitalFirstLetter/capital-first-letter.pipe.ts",
+        "hash": "13162544535238215386"
       },
       {
         "file": "src/app/pipes/filter/filter.pipe.spec.ts",
@@ -662,12 +970,20 @@
         "hash": "10486033139009403332"
       },
       {
+        "file": "src/app/pipes/json-decode.pipe.spec.ts",
+        "hash": "5569968245448528342"
+      },
+      {
+        "file": "src/app/pipes/json-decode.pipe.ts",
+        "hash": "1400787857901858161"
+      },
+      {
         "file": "src/app/pipes/mcurrency/mcurrency.pipe.spec.ts",
         "hash": "15986684762276517486"
       },
       {
         "file": "src/app/pipes/mcurrency/mcurrency.pipe.ts",
-        "hash": "18230506182014949495"
+        "hash": "3190674565391864823"
       },
       {
         "file": "src/app/pipes/safe-html/safe-html.pipe.spec.ts",
@@ -694,12 +1010,36 @@
         "hash": "16930780812391668121"
       },
       {
+        "file": "src/app/repairs/repairs-routing.module.ts",
+        "hash": "75133894497430986"
+      },
+      {
+        "file": "src/app/repairs/repairs.module.ts",
+        "hash": "413087804093177893"
+      },
+      {
+        "file": "src/app/repairs/repairs.page.html",
+        "hash": "16512034660364098913"
+      },
+      {
+        "file": "src/app/repairs/repairs.page.scss",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "src/app/repairs/repairs.page.spec.ts",
+        "hash": "16487057243631009784"
+      },
+      {
+        "file": "src/app/repairs/repairs.page.ts",
+        "hash": "5829048527063773002"
+      },
+      {
         "file": "src/app/services/api/api.service.spec.ts",
         "hash": "8951269545676367714"
       },
       {
         "file": "src/app/services/api/api.service.ts",
-        "hash": "12632287277423037886"
+        "hash": "17683763945437540267"
       },
       {
         "file": "src/app/services/authentication/authentication.service.spec.ts",
@@ -723,7 +1063,7 @@
       },
       {
         "file": "src/app/services/events/events.service.ts",
-        "hash": "1783601362738343372"
+        "hash": "8205886388381730795"
       },
       {
         "file": "src/app/services/localStorage/local-storage.service.spec.ts",
@@ -732,6 +1072,14 @@
       {
         "file": "src/app/services/localStorage/local-storage.service.ts",
         "hash": "665056050763391307"
+      },
+      {
+        "file": "src/app/services/onesignal.service.spec.ts",
+        "hash": "7375037115675022080"
+      },
+      {
+        "file": "src/app/services/onesignal.service.ts",
+        "hash": "10349273956229845933"
       },
       {
         "file": "src/app/services/routes/routes.service.spec.ts",
@@ -743,7 +1091,7 @@
       },
       {
         "file": "src/app/services/shared.module.ts",
-        "hash": "11839777149110085536"
+        "hash": "16468745876665132114"
       },
       {
         "file": "src/app/services/shared.service.spec.ts",
@@ -751,19 +1099,55 @@
       },
       {
         "file": "src/app/services/shared.service.ts",
-        "hash": "4924438615874365230"
+        "hash": "14143876216823066965"
+      },
+      {
+        "file": "src/app/users/users-routing.module.ts",
+        "hash": "6846827935371825148"
+      },
+      {
+        "file": "src/app/users/users.module.ts",
+        "hash": "10017111947082577977"
+      },
+      {
+        "file": "src/app/users/users.page.html",
+        "hash": "15022723132901474744"
+      },
+      {
+        "file": "src/app/users/users.page.scss",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "src/app/users/users.page.spec.ts",
+        "hash": "13799931836743649499"
+      },
+      {
+        "file": "src/app/users/users.page.ts",
+        "hash": "12512309176980902251"
+      },
+      {
+        "file": "src/assets/css/ngx-datatable-bootstrap.scss",
+        "hash": "4676598236257644144"
       },
       {
         "file": "src/assets/i18n/ar.json",
-        "hash": "7823588970483477825"
+        "hash": "7501221204404867664"
       },
       {
         "file": "src/assets/i18n/en.json",
-        "hash": "7486166462969726533"
+        "hash": "470402835620192545"
       },
       {
         "file": "src/assets/icon/favicon.png",
         "hash": "4094163293893019714"
+      },
+      {
+        "file": "src/assets/imgs/accommodation-default.png",
+        "hash": "15904854122352060986"
+      },
+      {
+        "file": "src/assets/imgs/car-default.png",
+        "hash": "4742917754897705997"
       },
       {
         "file": "src/assets/imgs/logo-bosna.png",
@@ -779,15 +1163,15 @@
       },
       {
         "file": "src/environments/environment.prod.ts",
-        "hash": "8636897294487238224"
+        "hash": "3101624419863372280"
       },
       {
         "file": "src/environments/environment.ts",
-        "hash": "18048414826195356362"
+        "hash": "3319063067955305993"
       },
       {
         "file": "src/global.scss",
-        "hash": "3157359672799220858"
+        "hash": "5894005914867934517"
       },
       {
         "file": "src/index.html",
@@ -807,11 +1191,15 @@
       },
       {
         "file": "src/theme/variables.scss",
-        "hash": "16520425346001121369"
+        "hash": "4281850640098999815"
       },
       {
         "file": "src/zone-flags.ts",
         "hash": "3323586086306676158"
+      },
+      {
+        "file": "sync.ps1",
+        "hash": "11551580071709481175"
       },
       {
         "file": "tsconfig.app.json",
@@ -824,6 +1212,10 @@
       {
         "file": "tsconfig.spec.json",
         "hash": "17198424518534092990"
+      },
+      {
+        "file": "webpack.config.js",
+        "hash": "9857837000868734141"
       }
     ]
   }

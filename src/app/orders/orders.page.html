@@ -1,0 +1,174 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      <ion-icon name="list-outline" size="large" class="header-title-icon"></ion-icon>
+      {{"orders" | translate}}
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="openExportExcel()" *ngIf="'export_orders' | can: ['view']">
+        <ion-icon slot="end" name="document-text-outline"></ion-icon>
+        <span>{{ "Export Excel" | translate }}</span>
+      </ion-button>
+      <ion-button (click)="openFilter()" dir="ltr">
+        <ion-icon slot="end" name="options"></ion-icon>
+        <b>{{ selectedDate }}</b>
+      </ion-button>
+      <ion-button (click)="add()" *ngIf="pageName | can: ['create']">
+        <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-spinner *ngIf="loadingIndicator" class="my-loading-spinner"></ion-spinner>
+  <ngx-datatable class="bootstrap fullscreen" [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="0"
+    [rowHeight]="'auto'" [rowClass]="rowClass" [scrollbarV]="false" [scrollbarH]="true" [rows]="items"
+    [messages]="{ emptyMessage: '<h1 class=ion-text-center>'+('empty_data' | translate)+'</h1>' }"
+    [loadingIndicator]="loadingIndicator" [offset]="0">
+    <ngx-datatable-column [name]="'actions' | translate" [sortable]="false" [width]="125" [minWidth]="125"
+      [maxWidth]="125">
+      <ng-template let-rowIndex="rowIndex" let-row="row" ngx-datatable-cell-template>
+        <ion-button *ngIf="pageName | can: ['view']" (click)="edit(row?.id)" size="small" class="square-btn"
+          color="dark" fill="outline">
+          <ion-icon slot="icon-only" [name]="checkPermission(['update'], row) ? 'create' : 'eye-outline'"></ion-icon>
+        </ion-button>
+        <ion-button *ngIf="checkPermission(['delete'], row)" (click)="remove(rowIndex)" size="small" class="square-btn"
+          color="danger" fill="outline">
+          <ion-icon slot="icon-only" name="trash"></ion-icon>
+        </ion-button>
+        <ion-button *ngIf="pageName | can: ['view']" (click)="printBill(row)" size="small" class="square-btn"
+          color="dark" fill="outline">
+          <ion-icon slot="icon-only" name="print-outline"></ion-icon>
+        </ion-button>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column [name]="'no.' | translate" [maxWidth]="50" [minWidth]="30" [sortable]="false">
+      <ng-template let-rowIndex="rowIndex" ngx-datatable-cell-template>{{rowIndex + 1}}</ng-template>
+    </ngx-datatable-column>
+    <!-- <ngx-datatable-column [name]="'order_number' | translate" prop="id" [width]="70" [maxWidth]="70" [minWidth]="70">
+      <ng-template ngx-datatable-cell-template let-value="value">
+        #{{ value }}
+      </ng-template>
+    </ngx-datatable-column> -->
+    <ngx-datatable-column [name]="'name' | translate" prop="name" [width]="120" [maxWidth]="120" [minWidth]="70">
+      <ng-template ngx-datatable-cell-template let-row="row">
+        {{row?.name}}
+        <br>
+        <a href="tel: {{row?.phone}}">{{row?.phone}}</a>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column [name]="'paid' | translate" prop="paid" [width]="100">
+      <ng-template ngx-datatable-cell-template let-value="value">
+        <div>
+          {{ value === 1 ? ('paid' | translate) : ('not_paid' | translate) }}
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column [name]="'arrive_at' | translate" prop="arrive_at" [width]="90" [maxWidth]="90"
+      [minWidth]="80">
+      <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
+        <div class="fix-dir">
+          <div>{{ (value | date: 'Y-MM-dd') || '-' }}</div>
+          <div>
+            <ion-text color="danger">
+              {{ row?.arrive_time }}
+            </ion-text>
+          </div>
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column [name]="'airline' | translate" prop="airline" [width]="100" [maxWidth]="100"
+      [minWidth]="70"></ngx-datatable-column>
+    <ngx-datatable-column [name]="'leave_at' | translate" prop="leave_at" [width]="90" [maxWidth]="90" [minWidth]="80">
+      <ng-template ngx-datatable-cell-template let-value="value">
+        <div class="fix-dir">
+          {{ (value | date: 'Y-MM-dd') || '-' }}
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column [name]="'total' | translate" prop="total" [width]="80" [maxWidth]="80" [minWidth]="70">
+      <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
+        <div *ngIf="!row?.total_special" class="fix-dir">
+          {{ value | mcurrency }}
+        </div>
+        <div class="fix-dir" *ngIf="row?.total_special">
+          <ion-text color="primary">
+            {{ row?.total_special | mcurrency }}
+          </ion-text>
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column [name]="'payments' | translate" prop="payments" [width]="90" [maxWidth]="90" [minWidth]="70">
+      <ng-template ngx-datatable-cell-template let-value="value">
+        <div class="fix-dir">
+          <div class="fix-dir" *ngFor="let itm of value">{{itm.amount | mcurrency: itm.currency}}</div>
+          <div class="fix-dir" *ngIf="value?.length === 0">{{0 | mcurrency}}</div>
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column [name]="'cars' | translate" prop="products" [width]="150" [maxWidth]="150" [minWidth]="70">
+      <ng-template ngx-datatable-cell-template let-value="value">
+        <ng-container *ngIf="orderProducts(value, 'car').length > 0; else elseTemplate">
+          <ol class="ion-no-padding ion-padding-start ion-no-margin" *ngIf="orderProducts(value, 'car') as itms">
+            <li *ngFor="let itm of itms">
+              {{itm?.product?.name}} <span class="flex-inline-center">(<b>{{itm?.start_at | date: 'dd'}}</b> <ion-icon
+                  name="arrow-forward-outline"></ion-icon> <b>{{itm?.end_at | date: 'dd'}}</b>)</span>
+            </li>
+          </ol>
+        </ng-container>
+        <ng-template #elseTemplate>
+          <div class="ion-padding">-</div>
+        </ng-template>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column [name]="'accommodations' | translate" prop="products" [width]="150" [maxWidth]="150"
+      [minWidth]="70">
+      <ng-template ngx-datatable-cell-template let-value="value">
+        <ng-container *ngIf="orderProducts(value, 'accommodation').length > 0; else elseTemplate">
+          <ol class="ion-no-padding ion-padding-start ion-no-margin"
+            *ngIf="orderProducts(value, 'accommodation') as itms">
+            <li *ngFor="let itm of itms">
+              {{itm?.product?.name}} <span class="flex-inline-center">(<b>{{itm?.start_at | date: 'dd'}}</b> <ion-icon
+                  name="arrow-forward-outline"></ion-icon> <b>{{itm?.end_at | date: 'dd'}}</b>)</span>
+            </li>
+          </ol>
+        </ng-container>
+        <ng-template #elseTemplate>
+          <div class="ion-padding">-</div>
+        </ng-template>
+
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column [name]="'drivers' | translate" prop="products" [width]="150" [maxWidth]="150" [minWidth]="70">
+      <ng-template ngx-datatable-cell-template let-value="value">
+        <ng-container *ngIf="orderProducts(value, 'driver').length > 0; else elseTemplate">
+          <ol class="ion-no-padding ion-padding-start ion-no-margin" *ngIf="orderProducts(value, 'driver') as itms">
+            <li *ngFor="let itm of itms" class="fix-dir">
+              {{itm?.product?.name}} <span class="flex-inline-center">(<b>{{itm?.start_at | date: 'dd'}}</b> <ion-icon
+                  name="arrow-forward-outline"></ion-icon> <b>{{itm?.end_at | date: 'dd'}}</b>)</span>
+            </li>
+          </ol>
+        </ng-container>
+        <ng-template #elseTemplate>
+          <div class="ion-padding">-</div>
+        </ng-template>
+
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column [name]="'status' | translate" prop="status" [width]="80" [maxWidth]="80" [minWidth]="70">
+      <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
+        <ion-text [color]="statusColor(value)">
+          {{ row?.status_name[shared.lang] }}
+        </ion-text>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column [name]="'updated_at' | translate" prop="updated_at" [width]="110" [maxWidth]="110"
+      [minWidth]="80" class="fix-dir"></ngx-datatable-column>
+    <ngx-datatable-column [name]="'created_at' | translate" prop="created_at" [width]="110" [maxWidth]="110"
+      [minWidth]="80" class="fix-dir"></ngx-datatable-column>
+  </ngx-datatable>
+</ion-content>

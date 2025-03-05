@@ -4,7 +4,7 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>
-      <ion-icon name="people-outline" size="large" class="header-title-icon"></ion-icon>
+      <ion-icon name="business-outline" size="large" class="header-title-icon"></ion-icon>
       {{"partners" | translate}}
     </ion-title>
     <ion-buttons slot="end">
@@ -18,8 +18,8 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <ion-spinner *ngIf="loadingIndicator" class="loading-spinner"></ion-spinner>
+<ion-content>
+  <ion-spinner *ngIf="loadingIndicator" class="my-loading-spinner"></ion-spinner>
   <ngx-datatable class="bootstrap fullscreen" [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="0"
     [rowHeight]="'auto'" [scrollbarV]="false" [scrollbarH]="true" [rows]="items"
     [messages]="{ emptyMessage: '<h1 class=ion-text-center>'+('empty_data' | translate)+'</h1>' }"

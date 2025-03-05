@@ -1,6 +1,7 @@
 {
   "AppName": "نظام البوسنة بعيون خليجية",
   "common": {
+    "saving": "جاري الحفظ",
     "language": "اللغة",
     "note": "ملاحظة",
     "confirm_msg": "هل أنت متأكد ؟",
@@ -83,7 +84,8 @@
   "register_no": "رقم التسجيل",
   "register_start": "بداية التسجيل",
   "register_end": "نهاية التسجيل",
-  "updated_at": "تاريخ آخر تعديل",
+  "updated_at": "تاريخ التعديل",
+  "created_at": "تاريخ الإضافة",
   "image": "الصورة",
   "actions": "العمليات",
   "cost": "التكلفة",
@@ -114,6 +116,93 @@
   "type": "النوع",
   "contact_name": "إسم التواصل",
   "phone": "رقم الهاتف",
-  "accommodations": "السكن"
+  "accommodations": "السكن",
+  "repairs": "مصروفات",
+  "repair": "مصروف",
+  "extra-services": "خدمات إضافية",
+  "extra-service": "خدمة إضافية",
+  "extra_services": "خدمات إضافية",
+  
+  "unauthorized.content": "ليس لديك الصلاحية لتكون هنا!",
 
+  "car-companies": "شركات المركبات",
+  "drivers": "السائقين",
+  "status": "الحالة",
+  "active": "فعال",
+  "inactive": "غير فعال",
+  "partner": "شريك",
+  "undefined": "غير محدد",
+  "new-order": "طلب جديد",
+  "edit-order": "تعديل طلب",
+  "order": "طلب",
+  "order_number": "رقم الطلب",
+  "client": "العميل",
+  "paid_at": "تاريخ الدفع",
+  "total": "المجموع",
+
+  "reserves": "الحجوزات",
+  "reserves & payments": "الحجوزات والدفعات",
+  "car": "مركبة",
+  "accommodation": "سكن",
+  "payments": "الدفعات",
+  "start_at": "يبدأ في",
+  "end_at": "ينتهي في",
+  "choose_date": "إختر تاريخ",
+  "reservation_date": "تاريخ الحجز",
+  "reserved": "محجوز",
+  "not-available-date": "هذا التاريخ غير متوفر، فهو يحتوي على أيام محجوزة بالفعل!",
+  "note": "ملاحظة",
+
+  "driver": "السائق",
+
+  "address": "العنوان",
+  "location": "الموقع",
+
+  "amount": "المبلغ",
+  "currency": "العملة",
+  "remain": "الباقي",
+
+  "count": "العدد",
+  "revenue": "الربح",
+  
+  "order_status": {
+    "new": "جديد",
+    "confirmed": "تم التأكيد",
+    "completed": "منتهي",
+    "canceled": "تم الإلغاء",
+    "refunded": "المبلغ مرجع"
+  },
+
+  "car_orders" : "طلبات المركبات",
+  "accommmodation_orders" : "طلبات السكن",
+  "driver_orders" : "طلبات السائقين",
+
+  "paid" : "مدفوع",
+  "all" : "الجميع",
+  "the_year" : "السنة",
+  "the_month" : "الشهر",
+
+  "arrive_at" : "تاريخ الوصول",
+  "leave_at" : "تاريخ العودة",
+  "arrive_time" : "وقت الوصول",
+  "airline" : "شركة الطيران",
+
+  "history" : "تاريخ التعديلات",
+  "updates" : "التعديلات",
+  "activity_type" : "نوع النشاط",
+  "item" : "العنصر",
+  "id" : "المعرًف",
+  "payment_type": "النوع",
+  "payment": "دفعة",
+  "deposit": "تأمين",
+
+  "total_special": "سعر خاص",
+
+  "not_paid": "غير مدفوع",
+
+  "orders-calendar": "تقويم الطلبات",
+
+  "customer": "الزبون",
+
+  "Export Excel": "تصدير إكسل"
 }

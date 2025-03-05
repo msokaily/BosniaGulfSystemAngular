@@ -1,0 +1,14 @@
+<ion-content>
+  <ion-item lines="none">
+    <ion-label>
+      <ion-text [color]="data?.color || 'dark'">
+        <b>{{data?.title}}</b>
+      </ion-text>
+    </ion-label>
+    <ion-button color="dark" class="toggle-btn" size="large" (click)="close()">
+      <ion-icon slot="icon-only" name="close"></ion-icon>
+    </ion-button>
+  </ion-item>
+  <div class="ion-padding" [innerHtml]="data?.message | safeHtml">
+  </div>
+</ion-content>

@@ -1,6 +1,7 @@
 {
   "AppName": "Bosnia in Gulf's Eyes System",
   "common": {
+    "saving": "Saving",
     "language": "language",
     "note": "Note",
     "confirm_msg": "Are you sure ?",
@@ -45,9 +46,7 @@
     "errors": {
       "server": "Server error, please try again!",
       "required_values": "Please fill all the required fields!",
-      "notif_error": "Send notification failed, please try again!",
-      "select_employee": "Please select the current employee!",
-      "notif_empty_tokens": "Could not send push verification, this user doesn't have WATCARD app!"
+      "notif_error": "Send notification failed, please try again!"
     }
   },
 
@@ -69,7 +68,7 @@
   "server_error": "Server error, please check internet connection!",
   "incorrect_login": "Incorrect login credentials!",
 
-  "cars": "Cars",
+  "cars": "Vehicles",
 
   "orders": "Orders",
   "logout": "Logout",
@@ -83,7 +82,8 @@
   "register_no": "Register No.",
   "register_start": "Register Start",
   "register_end": "Register End",
-  "updated_at": "Last Update At",
+  "updated_at": "Update At",
+  "created_at": "Created At",
   "image": "Image",
   "actions": "Actions",
   "cost": "Cost",
@@ -114,6 +114,93 @@
   "type": "Type",
   "contact_name": "Contact Name",
   "phone": "Phone",
-  "accommodations": "Accommodations"
+  "accommodations": "Accommodations",
+  "repairs": "Expenses",
+  "repair": "Expense",
+  "extra-services": "Extra Services",
+  "extra-service": "Extra Service",
+  "extra_services": "Extra Services",
+
+  "unauthorized.content": "Your not allowed to be here!",
+
+  "car-companies": "Vehicles Brands",
+  "drivers": "Drivers",
+  "status": "Status",
+  "active": "Active",
+  "inactive": "InActive",
+  "partner": "Partner",
+  "undefined": "Undefined",
+  "new-order": "New Order",
+  "edit-order": "Edit Order",
+  "order": "Order",
+  "order_number": "Ord Nr.",
+  "client": "Client",
+  "paid_at": "Paid At",
+  "total": "Total",
+
+  "reserves": "Reservations",
+  "reserves & payments": "Reservations & Payments",
+  "car": "Vehicle",
+  "accommodation": "Accommodation",
+  "payments": "Payments",
+  "start_at": "Start At",
+  "end_at": "End At",
+  "choose_date": "Choose Date",
+  "reservation_date": "Reservation Date",
+  "reserved": "reserved",
+  "not-available-date": "This date is not available, it contains already reserved days!",
+  "note": "Note",
+
+  "driver": "Driver",
+
+  "address": "Address",
+  "location": "Location",
+
+  "amount": "Amount",
+  "currency": "Currency",
+  "remain": "Remain",
+
+  "count": "Count",
+  "revenue": "Profit",
+
+  "order_status": {
+    "new": "New",
+    "confirmed": "Confirmed",
+    "completed": "Completed",
+    "canceled": "Canceled",
+    "refunded": "Refunded"
+  },
+  "car_orders" : "Vehicles Orders",
+  "accommmodation_orders" : "Accommodations Orders",
+  "driver_orders" : "Drivers Orders",
+
+  "paid" : "Paid",
+  "all" : "All",
+  "the_year" : "The Year",
+  "the_month" : "The Month",
+
+  "arrive_at" : "Arrive Date",
+  "leave_at" : "Return Date",
+  "arrive_time" : "Arrive Time",
+  "airline" : "Airline",
+
+  "history" : "Updates history",
+  "updates" : "Updates",
+  "activity_type" : "Activity Type",
+  "item" : "Item",
+  "id" : "ID",
+  "payment_type": "Type",
+  "payment": "Payment",
+  "deposit": "Deposit",
+
+  "total_special": "Special Total",
+
+  "not_paid": "Not Paid",
+
+  "orders-calendar": "Orders Calendar",
+
+  "customer": "Customer",
+
+  "Export Excel": "Export Excel"
 
 }

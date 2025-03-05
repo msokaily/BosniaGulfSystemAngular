@@ -1,0 +1,84 @@
+/* Full-width calendar container */
+.calendar-container {
+  background: #fff;
+  padding: 20px;
+  margin-bottom: 30px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+}
+
+/* Month title styling */
+h2 {
+  text-align: center;
+  margin-bottom: 15px;
+  font-size: 22px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Weekdays header */
+.weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  font-weight: bold;
+  text-align: center;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #ddd;
+  color: #555;
+}
+
+/* Container for all rows */
+.day-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+/* Each row container: using CSS Grid for 7 equal columns */
+.day-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+/* Each day cell */
+.day-box {
+  background: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  text-align: center;
+  line-height: 70px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #444;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+/* Reservation block overlay inside a row */
+.reservation-block {
+  position: absolute;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  padding: 2px 5px;
+  border-radius: 3px;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: 12px;
+  z-index: 10;
+  cursor: pointer;
+}
+
+/* Reservation block image */
+.reservation-block img {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-inline-end: 5px;
+}

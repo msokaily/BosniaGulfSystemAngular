@@ -1,0 +1,16 @@
+ion-item {
+  --inner-padding-end: 10px;
+  font-size: 20px;
+}
+
+.toggle-btn {
+  --border-radius: 100%;
+  --box-shadow: none;
+  width: 25px;
+  height: 25px;
+  min-height: 25px;
+  --padding-start: 5px;
+  --padding-end: 5px;
+  --padding-top: 0;
+  --padding-bottom: 0;
+}

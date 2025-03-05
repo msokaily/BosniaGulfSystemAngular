@@ -1,0 +1,22 @@
+.stat-num {
+    // align-items: center;
+    border-bottom: 1px solid #eeeeee;
+    ion-col {
+        font-size: 25px;
+        direction: ltr;
+        font-weight: bold;
+    }
+    ion-col:nth-child(1) {
+        font-size: initial;
+    }
+}
+
+.stat-num:last-child {
+    border-bottom: none;
+}
+
+.header-row {
+    ion-col {
+        text-align: end;
+    }
+}
