@@ -191,6 +191,7 @@
   "id" : "ID",
   "payment_type": "Type",
   "payment": "Payment",
+  "down_payment": "Down Payment",
   "deposit": "Deposit",
 
   "total_special": "Special Total",

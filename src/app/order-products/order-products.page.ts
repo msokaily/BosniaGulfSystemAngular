@@ -393,7 +393,7 @@ export class OrderProductsPage implements OnInit {
         type: 'select',
         title: await this.shared.trans('payment_type'),
         value: data?.type || 'payment',
-        options: ['payment', 'deposit'].map(v => { return { id: v, name: v }; }),
+        options: await Promise.all(['payment', 'down_payment', 'deposit'].map(async v => { return { id: v, name: await this.shared.trans(v) }; })),
         required: true,
       },
       {
@@ -438,7 +438,6 @@ export class OrderProductsPage implements OnInit {
   async editPayment(id: number, data?: any, errors?: any) {
 
     const index = this.paymentsItems.findIndex(v => v?.id == id);
-
     const inputs: CustomInput[] = [
       {
         name: 'amount',
@@ -469,7 +468,7 @@ export class OrderProductsPage implements OnInit {
         type: 'select',
         title: await this.shared.trans('payment_type'),
         value: data?.type || this.paymentsItems[index]?.type || 'payment',
-        options: ['payment', 'deposit'].map(v => { return { id: v, name: v }; }),
+        options: await Promise.all(['payment', 'down_payment', 'deposit'].map(async v => { return { id: v, name: await this.shared.trans(v) }; })),
         required: true,
       },
       {
@@ -503,8 +502,10 @@ export class OrderProductsPage implements OnInit {
         if (!resp?.status) {
           this.editPayment(id, data, resp?.data?.errors);
         }
-        this.refresh(true, false);
         this.OnChange.emit(true);
+        setTimeout(() => {
+          this.refresh(true, false);
+        }, 1000);
       }
     });
     this.pop.present();

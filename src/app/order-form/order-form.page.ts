@@ -52,10 +52,14 @@ export class OrderFormPage implements OnInit {
 
   get paymentsSum() {
     return {
-      'EUR': this.order?.payments?.filter((v: any) => v?.currency == 'EUR')?.reduce((prev: number, curr: any) => { return prev + parseFloat(curr?.amount) }, 0) || 0,
-      'BAM': this.order?.payments?.filter((v: any) => v?.currency == 'BAM' || v?.currency == 'KM')?.reduce((prev: number, curr: any) => { return prev + parseFloat(curr?.amount) }, 0) || 0,
-      'USD': this.order?.payments?.filter((v: any) => v?.currency == 'USD')?.reduce((prev: number, curr: any) => { return prev + parseFloat(curr?.amount) }, 0) || 0,
+      'EUR': this.order?.payments?.filter((v: any) => v?.currency == 'EUR' && v?.type != 'deposit')?.reduce((prev: number, curr: any) => { return prev + parseFloat(curr?.amount) }, 0) || 0,
+      'BAM': this.order?.payments?.filter((v: any) => (v?.currency == 'BAM' || v?.currency == 'KM') && v?.type != 'deposit')?.reduce((prev: number, curr: any) => { return prev + parseFloat(curr?.amount) }, 0) || 0,
+      'USD': this.order?.payments?.filter((v: any) => v?.currency == 'USD' && v?.type != 'deposit')?.reduce((prev: number, curr: any) => { return prev + parseFloat(curr?.amount) }, 0) || 0,
     };
+  }
+
+  get deposit() {
+    return this.order?.payments?.filter((v: any) => v?.currency == 'EUR' && v?.type == 'deposit')?.reduce((prev: number, curr: any) => { return prev + parseFloat(curr?.amount) }, 0) || 0;
   }
 
   async ngOnInit(hideLoading = false) {
@@ -133,7 +137,7 @@ export class OrderFormPage implements OnInit {
       {
         name: 'arrive_at',
         type: 'date',
-        format: 'YYYY-MM-dd',
+        format: 'dd-MM-YYYY',
         title: await this.shared.trans('arrive_at'),
         value: this.order?.arrive_at || '',
         required: true,
@@ -154,7 +158,7 @@ export class OrderFormPage implements OnInit {
       {
         name: 'leave_at',
         type: 'native-date',
-        format: 'YYYY-MM-dd',
+        format: 'dd-MM-YYYY',
         title: await this.shared.trans('leave_at'),
         value: this.order?.leave_at || '',
         min: min_date,

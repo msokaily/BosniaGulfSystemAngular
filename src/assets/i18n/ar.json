@@ -194,6 +194,7 @@
   "id" : "المعرًف",
   "payment_type": "النوع",
   "payment": "دفعة",
+  "down_payment": "عربون",
   "deposit": "تأمين",
 
   "total_special": "سعر خاص",

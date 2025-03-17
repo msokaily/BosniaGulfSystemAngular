@@ -61,7 +61,7 @@
         <a href="tel: {{row?.phone}}">{{row?.phone}}</a>
       </ng-template>
     </ngx-datatable-column>
-    <ngx-datatable-column [name]="'paid' | translate" prop="paid" [width]="100">
+    <ngx-datatable-column [name]="'paid' | translate" prop="paid" [width]="60" [maxWidth]="60" [minWidth]="60">
       <ng-template ngx-datatable-cell-template let-value="value">
         <div>
           {{ value === 1 ? ('paid' | translate) : ('not_paid' | translate) }}
@@ -72,7 +72,7 @@
       [minWidth]="80">
       <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
         <div class="fix-dir">
-          <div>{{ (value | date: 'Y-MM-dd') || '-' }}</div>
+          <div>{{ (value | date: 'dd-MM-Y') || '-' }}</div>
           <div>
             <ion-text color="danger">
               {{ row?.arrive_time }}
@@ -86,7 +86,7 @@
     <ngx-datatable-column [name]="'leave_at' | translate" prop="leave_at" [width]="90" [maxWidth]="90" [minWidth]="80">
       <ng-template ngx-datatable-cell-template let-value="value">
         <div class="fix-dir">
-          {{ (value | date: 'Y-MM-dd') || '-' }}
+          {{ (value | date: 'dd-MM-Y') || '-' }}
         </div>
       </ng-template>
     </ngx-datatable-column>
@@ -105,7 +105,7 @@
     <ngx-datatable-column [name]="'payments' | translate" prop="payments" [width]="90" [maxWidth]="90" [minWidth]="70">
       <ng-template ngx-datatable-cell-template let-value="value">
         <div class="fix-dir">
-          <div class="fix-dir" *ngFor="let itm of value">{{itm.amount | mcurrency: itm.currency}}</div>
+          <div class="fix-dir" *ngFor="let itm of value | filter: 'type': ['payment', 'down_payment']">{{itm.amount | mcurrency: itm.currency}}</div>
           <div class="fix-dir" *ngIf="value?.length === 0">{{0 | mcurrency}}</div>
         </div>
       </ng-template>
@@ -167,8 +167,20 @@
       </ng-template>
     </ngx-datatable-column>
     <ngx-datatable-column [name]="'updated_at' | translate" prop="updated_at" [width]="110" [maxWidth]="110"
-      [minWidth]="80" class="fix-dir"></ngx-datatable-column>
+      [minWidth]="80">
+      <ng-template ngx-datatable-cell-template let-value="value">
+        <div class="fix-dir">
+          {{ (value | date: 'dd-MM-Y') || '-' }}
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
     <ngx-datatable-column [name]="'created_at' | translate" prop="created_at" [width]="110" [maxWidth]="110"
-      [minWidth]="80" class="fix-dir"></ngx-datatable-column>
+      [minWidth]="80">
+      <ng-template ngx-datatable-cell-template let-value="value">
+        <div class="fix-dir">
+          {{ (value | date: 'dd-MM-Y') || '-' }}
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
   </ngx-datatable>
 </ion-content>
