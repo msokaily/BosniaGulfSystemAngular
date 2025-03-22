@@ -84,6 +84,23 @@ export class DriversPage implements OnInit {
         min: 0
       },
       {
+        name: 'multiple',
+        type: 'select',
+        title: await this.shared.trans('multiple-save-reserve'),
+        note: await this.shared.trans('multiple-save-reserve-note'),
+        value: data?.multiple || 1,
+        options: [
+          {
+            id: 1,
+            name: await this.shared.trans('common.no')
+          },
+          {
+            id: 2,
+            name: await this.shared.trans('common.yes')
+          }
+        ]
+      },
+      {
         name: 'status',
         type: 'select',
         title: await this.shared.trans('status'),
@@ -156,6 +173,23 @@ export class DriversPage implements OnInit {
         title: await this.shared.trans('price'),
         value: data?.price || this.items[index]?.price || 0,
         min: 0
+      },
+      {
+        name: 'multiple',
+        type: 'select',
+        title: await this.shared.trans('multiple-save-reserve'),
+        note: await this.shared.trans('multiple-save-reserve-note'),
+        value: data?.multiple || this.items[index]?.multiple || 1,
+        options: [
+          {
+            id: 1,
+            name: await this.shared.trans('common.no')
+          },
+          {
+            id: 2,
+            name: await this.shared.trans('common.yes')
+          }
+        ]
       },
       {
         name: 'status',

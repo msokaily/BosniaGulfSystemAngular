@@ -80,11 +80,15 @@ export class EditPagePage implements OnInit {
           temp[inp.name] = inp?.value;
         }
         this.inputs[index].value = await this.fileToUrl(inp?.value);
+      } else if (inp?.value == 'number') {
+        temp[inp.name] = parseInt(inp?.value);
       } else if (inp?.value !== null) {
         temp[inp.name] = inp?.value;
       }
     });
-    this.form = temp;
+    this.form = {...temp};
+    // console.log(temp);
+    
     setTimeout(() => {
       this.inputs.forEach(inp => {
         if (inp.changed && inp.value !== null) {

@@ -13,8 +13,8 @@
       </div>
     </ion-list>
   </div>
-  <div *ngIf="inputs && inputs.length > 0">
-    <ion-grid>
+  <div *ngIf="inputs && inputs.length > 0" style="overflow-x: auto;">
+    <ion-grid [style.width]="width ? width+'px': ''" [style.min-width]="minWidth ? minWidth+'px': ''">
       <ion-row>
         <ion-col [size]="input?.colSize || colSize" *ngFor="let input of inputs" [class.ion-hide]="input.type === 'hidden'">
           <div class="custom-input" *ngIf="['text', 'email', 'password', 'number'].includes(input.type)">
@@ -45,15 +45,19 @@
                     (ionChange)="dateChanged($event, input.name)"
                     [max]="input?.max || 3000-12-30"
                     [showClearButton]="false"
-                    [clearText]="'common.clear' | translate"></ion-datetime>
+                    [clearText]="'common.clear' | translate">
+                  </ion-datetime>
                 </ng-template>
               </ion-modal>
             </ion-item>
             <ion-note *ngIf="input?.note" class="ion-padding-start" color="warning">{{input.note}}</ion-note>
           </div>
           <div class="custom-input" *ngIf="input.type === 'native-date'">
-            <ion-item lines="none">
+            <ion-item lines="none" button>
               <ion-label class="custom-label">{{input.title}}</ion-label>
+              <div class="native-date-display" (click)="openNativeDatePicker(input.name)">
+                {{ form[input.name] ? (form[input.name] | date: input?.format ?? 'dd-MM-yyyy') : 'Select a date' }}
+              </div>
               <input class="native-date-input" [id]="prefix+input.name" type="date" [disabled]="input?.readonly || false" [(ngModel)]="form[input.name]" [required]="input?.required ?? false"
                 (ionChange)="dateChanged($event, input.name)" [min]="input?.min || '1900-01-01'" [max]="input?.max || 3000-12-30">
             </ion-item>
@@ -68,7 +72,7 @@
               <ion-modal [keepContentsMounted]="true">
                 <ng-template>
                   <ion-datetime *ngIf="form[input.name]" [id]="prefix+input.name" [(ngModel)]="form[input.name]" [doneText]="'common.ok' | translate"
-                    [cancelText]="'common.cancel' | translate" [presentation]="'time'" [showDefaultButtons]="true"
+                    [cancelText]="'common.cancel' | translate" [presentation]="'time'" [showDefaultButtons]="true" [hourCycle]="'h24'"
                     [showDefaultTitle]="true" [required]="input?.required ?? false" [max]="input?.max || undefined"></ion-datetime>
                 </ng-template>
               </ion-modal>

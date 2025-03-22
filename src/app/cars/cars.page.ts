@@ -113,6 +113,23 @@ export class CarsPage implements OnInit {
         value: data?.register_end || ''
       },
       {
+        name: 'multiple',
+        type: 'select',
+        title: await this.shared.trans('multiple-save-reserve'),
+        note: await this.shared.trans('multiple-save-reserve-note'),
+        value: data?.multiple || 1,
+        options: [
+          {
+            id: 1,
+            name: await this.shared.trans('common.no')
+          },
+          {
+            id: 2,
+            name: await this.shared.trans('common.yes')
+          }
+        ]
+      },
+      {
         name: 'status',
         type: 'select',
         title: await this.shared.trans('status'),
@@ -166,6 +183,7 @@ export class CarsPage implements OnInit {
   async edit(index: number, data?: any, errors?: any) {
     const loading = await this.shared.loading({message: await this.shared.trans('common.loading')});
     const carCompanies = await this.api.carCompanies();
+    
     const inputs: CustomInput[] = [
       {
         name: 'name',
@@ -208,15 +226,32 @@ export class CarsPage implements OnInit {
         name: 'register_start',
         type: 'date',
         title: await this.shared.trans('register_start'),
-        format: 'YYYY-MM-dd',
+        format: 'dd-MM-YYYY',
         value: data?.register_start || this.items[index]?.register_start || ''
       },
       {
         name: 'register_end',
         type: 'date',
-        format: 'YYYY-MM-dd',
+        format: 'dd-MM-YYYY',
         title: await this.shared.trans('register_end'),
         value: data?.register_end || this.items[index]?.register_end || ''
+      },
+      {
+        name: 'multiple',
+        type: 'select',
+        title: await this.shared.trans('multiple-save-reserve'),
+        note: await this.shared.trans('multiple-save-reserve-note'),
+        value: data?.multiple || this.items[index]?.multiple || 1,
+        options: [
+          {
+            id: 1,
+            name: await this.shared.trans('common.no')
+          },
+          {
+            id: 2,
+            name: await this.shared.trans('common.yes')
+          }
+        ]
       },
       {
         name: 'status',

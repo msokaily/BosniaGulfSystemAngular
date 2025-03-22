@@ -1,3 +1,27 @@
 .custom-input {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
+}
+
+/* your-component.css */
+.native-date-display {
+  cursor: pointer;
+  padding: 5px 10px;
+  display: inline-block;
+  border-radius: 5px;
+  background-color: #edeef0;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+
+.native-date-input {
+  position: absolute;
+//   left: -9999px;
+  visibility: hidden;
+  /* Move the input off-screen */
+}
+
+@media (prefers-color-scheme: dark) {
+    .native-date-display {
+        background-color: #595959;
+    }
 }

@@ -122,6 +122,23 @@ export class AccommodationsPage implements OnInit {
         value: data?.location || ''
       },
       {
+        name: 'multiple',
+        type: 'select',
+        title: await this.shared.trans('multiple-save-reserve'),
+        note: await this.shared.trans('multiple-save-reserve-note'),
+        value: data?.multiple || 1,
+        options: [
+          {
+            id: 1,
+            name: await this.shared.trans('common.no')
+          },
+          {
+            id: 2,
+            name: await this.shared.trans('common.yes')
+          }
+        ]
+      },
+      {
         name: 'status',
         type: 'select',
         title: await this.shared.trans('status'),
@@ -240,6 +257,23 @@ export class AccommodationsPage implements OnInit {
         type: 'text',
         title: await this.shared.trans('location'),
         value: data?.location || this.items[index]?.location || ''
+      },
+      {
+        name: 'multiple',
+        type: 'select',
+        title: await this.shared.trans('multiple-save-reserve'),
+        note: await this.shared.trans('multiple-save-reserve-note'),
+        value: data?.multiple || this.items[index]?.multiple || 1,
+        options: [
+          {
+            id: 1,
+            name: await this.shared.trans('common.no')
+          },
+          {
+            id: 2,
+            name: await this.shared.trans('common.yes')
+          }
+        ]
       },
       {
         name: 'status',

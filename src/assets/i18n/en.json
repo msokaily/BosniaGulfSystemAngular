@@ -1,6 +1,7 @@
 {
   "AppName": "Bosnia in Gulf's Eyes System",
   "common": {
+    "save": "Save",
     "saving": "Saving",
     "language": "language",
     "note": "Note",
@@ -43,6 +44,7 @@
     "logout-success": "Logged out successfully",
     "confirm-message": "Are you sure?",
     "remove-success": "Deleted successfully!",
+    "restore-success": "Restored successfully!",
     "errors": {
       "server": "Server error, please try again!",
       "required_values": "Please fill all the required fields!",
@@ -202,6 +204,14 @@
 
   "customer": "Customer",
 
-  "Export Excel": "Export Excel"
+  "Export Excel": "Export Excel",
+
+  "multiple-save-reserve": "Multiple Reserve",
+  "multiple-save-reserve-note": "Can be reserved multiple times in the same dates",
+
+  "reservations_count": "Reservations Count",
+
+  "Trash": "Trash",
+  "restore": "Restore"
 
 }

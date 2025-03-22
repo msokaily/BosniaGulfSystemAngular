@@ -303,6 +303,7 @@ export type CustomInput = {
   options?: any[];
   multiple?: boolean;
   format?: any;
+  hourCycle?: 'h12' | 'h23' | 'h11' | 'h24';
   required?: boolean;
   note?: string;
   max?: any;

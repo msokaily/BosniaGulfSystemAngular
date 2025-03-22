@@ -8,6 +8,10 @@
       {{"orders" | translate}}
     </ion-title>
     <ion-buttons slot="end">
+      <ion-button (click)="trash()" *ngIf="pageName | can: ['view']" [ngClass]="{'active': isTrash}">
+        <ion-icon slot="end" name="trash-outline"></ion-icon>
+        <span>{{ "Trash" | translate }}</span>
+      </ion-button>
       <ion-button (click)="openExportExcel()" *ngIf="'export_orders' | can: ['view']">
         <ion-icon slot="end" name="document-text-outline"></ion-icon>
         <span>{{ "Export Excel" | translate }}</span>
@@ -32,18 +36,26 @@
     <ngx-datatable-column [name]="'actions' | translate" [sortable]="false" [width]="125" [minWidth]="125"
       [maxWidth]="125">
       <ng-template let-rowIndex="rowIndex" let-row="row" ngx-datatable-cell-template>
-        <ion-button *ngIf="pageName | can: ['view']" (click)="edit(row?.id)" size="small" class="square-btn"
-          color="dark" fill="outline">
-          <ion-icon slot="icon-only" [name]="checkPermission(['update'], row) ? 'create' : 'eye-outline'"></ion-icon>
-        </ion-button>
-        <ion-button *ngIf="checkPermission(['delete'], row)" (click)="remove(rowIndex)" size="small" class="square-btn"
-          color="danger" fill="outline">
-          <ion-icon slot="icon-only" name="trash"></ion-icon>
-        </ion-button>
-        <ion-button *ngIf="pageName | can: ['view']" (click)="printBill(row)" size="small" class="square-btn"
-          color="dark" fill="outline">
-          <ion-icon slot="icon-only" name="print-outline"></ion-icon>
-        </ion-button>
+        <div *ngIf="!isTrash && loadingIndicator === false">
+          <ion-button *ngIf="pageName | can: ['view']" (click)="edit(row?.id)" size="small" class="square-btn"
+            color="dark" fill="outline">
+            <ion-icon slot="icon-only" [name]="checkPermission(['update'], row) ? 'create' : 'eye-outline'"></ion-icon>
+          </ion-button>
+          <ion-button *ngIf="checkPermission(['delete'], row)" (click)="remove(rowIndex)" size="small" class="square-btn"
+            color="danger" fill="outline">
+            <ion-icon slot="icon-only" name="trash"></ion-icon>
+          </ion-button>
+          <ion-button *ngIf="pageName | can: ['view']" (click)="printBill(row)" size="small" class="square-btn"
+            color="dark" fill="outline">
+            <ion-icon slot="icon-only" name="print-outline"></ion-icon>
+          </ion-button>
+        </div>
+        <div *ngIf="isTrash && loadingIndicator === false">
+          <ion-button *ngIf="pageName | can: ['delete']" (click)="restore(row?.id)" size="small" class="square-btn"
+            color="dark" fill="outline">
+            <ion-icon slot="icon-only" name="download"></ion-icon>
+          </ion-button>
+        </div>
       </ng-template>
     </ngx-datatable-column>
     <ngx-datatable-column [name]="'no.' | translate" [maxWidth]="50" [minWidth]="30" [sortable]="false">

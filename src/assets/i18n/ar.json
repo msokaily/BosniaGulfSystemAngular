@@ -1,6 +1,7 @@
 {
   "AppName": "نظام البوسنة بعيون خليجية",
   "common": {
+    "save": "حفظ",
     "saving": "جاري الحفظ",
     "language": "اللغة",
     "note": "ملاحظة",
@@ -42,6 +43,7 @@
     "logout-success": "تم تسجيل الخروج بنجاح",
     "confirm-message": "هل أنت متأكد؟",
     "remove-success": "تم الحذف بنجاح!",
+    "restore-success": "تم الإستعادة بنجاح!",
     "errors": {
       "server": "خطأ في السيرفر, من فضلك حاول مرة أخرى",
       "required_values": "من فضلك أدخل جميع الحقول المطلوبة",
@@ -205,5 +207,13 @@
 
   "customer": "الزبون",
 
-  "Export Excel": "تصدير إكسل"
+  "Export Excel": "تصدير إكسل",
+
+  "multiple-save-reserve": "متعدد الحجز",
+  "multiple-save-reserve-note": "يمكن حجزه أكثر من مرة في نفس التاريخ",
+
+  "reservations_count": "عدد الحجوزات",
+
+  "Trash": "المحذوفات",
+  "restore": "إستعادة"
 }

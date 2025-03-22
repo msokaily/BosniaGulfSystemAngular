@@ -35,7 +35,7 @@
     </ngx-datatable-column>
     <ngx-datatable-column [name]="'no.' | translate" [width]="40" [sortable]="false"><ng-template let-rowIndex="rowIndex" ngx-datatable-cell-template>{{rowIndex + 1}}</ng-template></ngx-datatable-column>
     <ngx-datatable-column [name]="'id' | translate" prop="id" [width]="40" [sortable]="false"></ngx-datatable-column>
-    <ngx-datatable-column [name]="'image' | translate" prop="product?.image" [width]="60">
+    <ngx-datatable-column [name]="'image' | translate" prop="product.image" [width]="60">
       <ng-template ngx-datatable-cell-template let-value="value">
         <img [src]="value" onerror="this.src = 'assets/imgs/car-default.png'" width="40px" height="40px" />
       </ng-template>
@@ -44,14 +44,14 @@
     <ngx-datatable-column [name]="'start_at' | translate" prop="start_at" [width]="100">
       <ng-template ngx-datatable-cell-template let-value="value">
         <div class="fix-dir">
-          {{ (value | date: 'Y-MM-dd') || '-' }}
+          {{ (value | date: 'dd-MM-Y') || '-' }}
         </div>
       </ng-template>
     </ngx-datatable-column>
     <ngx-datatable-column [name]="'end_at' | translate" prop="end_at" [width]="100">
       <ng-template ngx-datatable-cell-template let-value="value">
         <div class="fix-dir">
-          {{ (value | date: 'Y-MM-dd') || '-' }}
+          {{ (value | date: 'dd-MM-Y') || '-' }}
         </div>
       </ng-template>
     </ngx-datatable-column>
@@ -99,14 +99,14 @@
     <ngx-datatable-column [name]="'start_at' | translate" prop="start_at" [width]="100">
       <ng-template ngx-datatable-cell-template let-value="value">
         <div class="fix-dir">
-          {{ (value | date: 'Y-MM-dd') || '-' }}
+          {{ (value | date: 'dd-MM-Y') || '-' }}
         </div>
       </ng-template>
     </ngx-datatable-column>
     <ngx-datatable-column [name]="'end_at' | translate" prop="end_at" [width]="100">
       <ng-template ngx-datatable-cell-template let-value="value">
         <div class="fix-dir">
-          {{ (value | date: 'Y-MM-dd') || '-' }}
+          {{ (value | date: 'dd-MM-Y') || '-' }}
         </div>
       </ng-template>
     </ngx-datatable-column>
@@ -155,14 +155,14 @@
     <ngx-datatable-column [name]="'start_at' | translate" prop="start_at" [width]="100">
       <ng-template ngx-datatable-cell-template let-value="value">
         <div class="fix-dir">
-          {{ (value | date: 'Y-MM-dd') || '-' }}
+          {{ (value | date: 'dd-MM-Y') || '-' }}
         </div>
       </ng-template>
     </ngx-datatable-column>
     <ngx-datatable-column [name]="'end_at' | translate" prop="end_at" [width]="100">
       <ng-template ngx-datatable-cell-template let-value="value">
         <div class="fix-dir">
-          {{ (value | date: 'Y-MM-dd') || '-' }}
+          {{ (value | date: 'dd-MM-Y') || '-' }}
         </div>
       </ng-template>
     </ngx-datatable-column>
@@ -216,7 +216,7 @@
     <ngx-datatable-column [name]="'paid_at' | translate" prop="paid_at" [width]="100">
       <ng-template ngx-datatable-cell-template let-value="value">
         <div class="fix-dir">
-          {{ (value | date: 'Y-MM-dd') || '-' }}
+          {{ (value | date: 'dd-MM-Y') || '-' }}
         </div>
       </ng-template>
     </ngx-datatable-column>

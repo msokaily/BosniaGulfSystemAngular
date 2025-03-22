@@ -34,6 +34,8 @@ export class OrdersPage implements OnInit {
   accommodations: any[] = [];
   drivers: any[] = [];
 
+  isTrash = false;
+
   constructor(
     private auth: AuthenticationService,
     private api: ApiService,
@@ -45,7 +47,7 @@ export class OrdersPage implements OnInit {
   ) {
     this.events.listen.subscribe(resp => {
       if (resp.name == EVENTS.refreshOrders) {
-        this.refresh(true);
+        // this.refresh(true, false);
       }
     });
   }
@@ -65,6 +67,10 @@ export class OrdersPage implements OnInit {
     return this.datePipe.transform(d, 'Y MMMM');
   }
 
+  ionViewDidEnter(){
+    this.refresh(true, false);
+  }
+
   async ngOnInit() {
     this.loadingIndicator = true;
     const nowDate = new Date();
@@ -79,19 +85,26 @@ export class OrdersPage implements OnInit {
 
     // console.log({accommodations: this.accommodations, cars: this.cars, drivers: this.drivers});
 
-    this.refresh();
+    this.refresh(false, true);
   }
 
-  async refresh(hideLoading = false) {
+  async refresh(hideLoading = false, forceCache = true) {
     if (!hideLoading) {
       this.loadingIndicator = true;
     }
-    const params = {...(this.filterValues ?? {}), ...{year: this.selectedYear, month: this.selectedMonth + 1}}
-    const resp = await this.api.orders(params);
+    const params = {...(this.filterValues ?? {}), ...{year: this.selectedYear, month: this.selectedMonth + 1, trash: this.isTrash ? 1 : 0}};
+    
+    const resp = await this.api.orders(params, forceCache);
+    
     if (resp) {
       this.items = resp;
     }
     this.loadingIndicator = false;
+  }
+
+  trash(status: boolean | null = null) {
+    this.isTrash = status == null ? !this.isTrash : status;
+    this.refresh(false, false);
   }
 
   async add() {
@@ -201,7 +214,7 @@ export class OrdersPage implements OnInit {
           this.selectedYear = monthDate.getFullYear();
           this.selectedMonth = monthDate.getMonth();
         }
-        this.refresh();
+        this.refresh(false, false);
       }
     });
     pop.present();
@@ -258,6 +271,34 @@ export class OrdersPage implements OnInit {
 
   openExportExcel() {
     window.open(this.api.export_orders_excel({year: this.selectedYear, month: this.selectedMonth + 1}), "_blank");
+  }
+
+  async restore(id: any) {
+    const trans = await this.shared.trans([
+      'common.confirmation',
+      'common.confirm-message',
+      'common.remove-success',
+      'common.restore-success',
+      'common.yes',
+      'common.no',
+    ]);
+    this.shared.alert({
+      header: trans['common.confirmation'],
+      message: trans['common.confirm-message'],
+      buttons: [
+        {
+          text: trans['common.yes'],
+          handler: async () => {
+            await this.api.ordersRestore(id);
+            this.shared.toast({message: trans['common.restore-success'], color: 'success', duration: 1500});
+            this.refresh(true, false);
+          }
+        },
+        {
+          text: trans['common.no']
+        }
+      ]
+    });
   }
 
 }

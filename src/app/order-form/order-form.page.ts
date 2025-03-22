@@ -85,7 +85,7 @@ export class OrderFormPage implements OnInit {
     if (!this.canEdit) {
       readonly = true;
     }
-    let min_date = new Date(new Date().getTime() - (60 * 60 * 24 * 30 * 12 * 1000));
+    let min_date = this.datePipe.transform(new Date(new Date().getTime() - (60 * 60 * 24 * 30 * 12 * 1000)), 'dd-MM-YYYY');
 
     this.inputs = [
       {
@@ -111,7 +111,7 @@ export class OrderFormPage implements OnInit {
         type: 'text',
         title: await this.shared.trans('phone'),
         value: this.order?.phone || '',
-        required: true,
+        required: false,
         readonly,
         colSize: 2.5
       },
@@ -136,11 +136,11 @@ export class OrderFormPage implements OnInit {
       },
       {
         name: 'arrive_at',
-        type: 'date',
+        type: 'native-date',
         format: 'dd-MM-YYYY',
         title: await this.shared.trans('arrive_at'),
-        value: this.order?.arrive_at || '',
-        required: true,
+        value: this.order?.arrive_at || new Date(),
+        required: false,
         min: min_date,
         readonly,
         colSize: 2.4
@@ -151,7 +151,8 @@ export class OrderFormPage implements OnInit {
         format: 'HH:mm',
         title: await this.shared.trans('arrive_time'),
         value: this.order?.arrive_time || '',
-        required: true,
+        hourCycle: 'h24',
+        required: false,
         readonly,
         colSize: 2.4
       },
@@ -161,7 +162,6 @@ export class OrderFormPage implements OnInit {
         format: 'dd-MM-YYYY',
         title: await this.shared.trans('leave_at'),
         value: this.order?.leave_at || '',
-        min: min_date,
         readonly,
         colSize: 2.4
       },
@@ -213,10 +213,10 @@ export class OrderFormPage implements OnInit {
     let respOrder: any;
     if (this.isEdit) {
       respOrder = await this.api.ordersUpdate(this.order?.id, this.formData);
+      this.events.publish({ name: EVENTS.refreshOrders });
       if (goBack) {
         this.shared.navRouteBack('orders');
       }
-      this.events.publish({ name: EVENTS.refreshOrders });
     } else {
       respOrder = await this.api.ordersCreate(this.formData);
       this.shared.navRouteRoot('view-order', [respOrder?.data?.id]);
@@ -224,8 +224,8 @@ export class OrderFormPage implements OnInit {
     loading.dismiss();
   }
   orderProductsChanged() {
-    this.ngOnInit(true);
     this.events.publish({ name: EVENTS.refreshOrders });
+    this.ngOnInit(true);
   }
   async submit() {
     this.orderForm.submit();
@@ -256,7 +256,7 @@ export class OrderFormPage implements OnInit {
       if (v.role === 'success') {
         const formData: any = v.data;
         formData.name = this.order?.name;
-        await this.form1Submitted(formData);
+        await this.form1Submitted(formData, false);
         // const loading = await this.shared.loading({ message: await this.shared.trans('common.saving') });
         // const resp = await this.api.carsUpdate(this.items[index]?.id, v.data);
         // loading.dismiss();

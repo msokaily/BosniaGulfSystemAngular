@@ -14,7 +14,7 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <app-dynamic-form [inputs]="inputs" [colSize]="6" (OnSubmit)="form1Submitted($event)" (ComponentObject)="compObject1($event)"></app-dynamic-form>
+  <app-dynamic-form [inputs]="inputs" [minWidth]="850" [colSize]="6" (OnSubmit)="form1Submitted($event)" (ComponentObject)="compObject1($event)"></app-dynamic-form>
   <ion-grid fixed *ngIf="isEdit">
     <ion-row>
       <ion-col size="12" style="border: 1px solid #CCC;">

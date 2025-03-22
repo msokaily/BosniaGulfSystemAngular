@@ -97,7 +97,10 @@ export class ApiService {
   //==============
   // orders
   //==============
-  async orders(params: any = {}): Promise<any> {
+  async orders(params: any = {}, cache = false): Promise<any> {
+    if (this.cache?.orders && cache) {
+      return await this.cache.orders;
+    }
     params.language = this.language;
     params = this.fixArrayParams(params);
     try {
@@ -107,6 +110,7 @@ export class ApiService {
         }
       }).pipe(timeout(this.timeout), retry(2)));
       if (resp?.status) {
+        this.cache.orders = resp?.data;
         return resp?.data;
       }
       return false;
@@ -165,6 +169,15 @@ export class ApiService {
   async ordersDelete(id: number, params: any = {}): Promise<any> {
     params.language = this.language;
     const resp: any = await firstValueFrom(this.http.delete(this.apiUrl + 'orders/' + id, {
+      params, headers: {
+        'Authorization': 'Bearer ' + this.authService.getToken()
+      }
+    }).pipe(timeout(this.timeout)));
+    return resp?.status;
+  }
+  async ordersRestore(id: number, params: any = {}): Promise<any> {
+    params.language = this.language;
+    const resp: any = await firstValueFrom(this.http.get(this.apiUrl + 'orders/' + id + '/restore', {
       params, headers: {
         'Authorization': 'Bearer ' + this.authService.getToken()
       }

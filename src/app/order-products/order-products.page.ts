@@ -91,6 +91,7 @@ export class OrderProductsPage implements OnInit {
       products = this.cars.map(v => { return { id: v?.id, name: v?.name, image: v?.image_url?.url } });
     }
     let min_date = new Date(new Date().getTime() - (60 * 60 * 24 * 30 * 12 * 1000));
+    const rest_count_trans = await this.shared.trans('reservations_count');
     const inputs: CustomInput[] = [
       {
         name: 'item_id',
@@ -122,7 +123,7 @@ export class OrderProductsPage implements OnInit {
               reservationDates.forEach(async (day) => {
                 disabledDays.push({
                   date: day,
-                  disable: this.productType == 'accommodation' ? false : ([firstDay, lastDay].includes(day) ? false : true),
+                  disable: product?.multiple == 2 ? false : ([firstDay, lastDay].includes(day) ? false : true),
                   subTitle: await this.shared.trans('reserved')
                 });
               });
@@ -130,10 +131,30 @@ export class OrderProductsPage implements OnInit {
           });
 
           inputs[inputs.findIndex(v => v.name == 'reservation_date')].dateRangeOptions = { daysConfig: disabledDays };
-          pop.componentProps = { ...pop.componentProps, ...{ inputs: inputs } };
+
           let formData: Record<string, any> = {
             price: product?.price
           };
+          if (product?.multiple == 2) {
+            inputs.push({
+              name: 'duplicate_times',
+              type: 'number',
+              title: rest_count_trans,
+              value: parseInt(data?.duplicate_times) || 1,
+              min: 1,
+              required: false,
+            });
+            formData['duplicate_times'] = parseInt(data?.duplicate_times) || 1;
+          } else {
+            const indexDuplicateTimes = inputs.findIndex(v => v.name == 'duplicate_times');
+            if (indexDuplicateTimes > -1) {
+              inputs.splice(indexDuplicateTimes, 1);
+            }
+            formData['duplicate_times'] = 1;
+          }
+          
+          pop.componentProps = { ...pop.componentProps, ...{ inputs: inputs } };
+
           this.events.publish({ name: EVENTS.setFormData, data: formData });
         }
       },
@@ -189,6 +210,7 @@ export class OrderProductsPage implements OnInit {
       if (v.role === 'success') {
         const loading = await this.shared.loading({ message: await this.shared.trans('common.saving') });
         const data: any = v.data;
+        
         data.order_id = this.order?.id;
         data.type = this.productType;
         data.start_at = data?.reservation_date?.from?.string;
@@ -241,12 +263,13 @@ export class OrderProductsPage implements OnInit {
           disabledDates?.forEach(async (day, index) => {
             disabledDays.push({
               date: day,
-              disable: this.productType == 'accommodation' ? false : ([0, disabledDates.length - 1].includes(index) ? false : true),
+              disable: product?.multiple == 2 ? false : ([0, disabledDates.length - 1].includes(index) ? false : true),
               subTitle: await this.shared.trans('reserved')
             });
           });
 
           inputs[inputs.findIndex(v => v.name == 'reservation_date')].dateRangeOptions = { daysConfig: disabledDays };
+
           this.pop.componentProps = { ...this.pop.componentProps, ...{ inputs: inputs } };
           if (!isFirst) {
             let formData: Record<string, any> = {

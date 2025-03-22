@@ -6,6 +6,7 @@ export const environment = {
   production: false,
   appName: 'البوسنة بعيون خليجية',
   serverUrl: 'https://bosnia-gulf-system.test/',
+  // serverUrl: 'http://192.168.0.2/bosnia-gulf-system/',
   // serverUrl: 'https://apps-engine.site/',
   onesignal: {
     appId: 'e8a301c0-d70d-4aa5-a05c-67b335f39bee'

@@ -11,6 +11,8 @@ export class DynamicFormPage implements OnInit, OnChanges {
 
   @Input() inputs!: CustomInput[];
   @Input() colSize: number = 6;
+  @Input() width: number | null = null;
+  @Input() minWidth: number | null = null;
 
   form: any;
   formToView: any;
@@ -92,6 +94,12 @@ export class DynamicFormPage implements OnInit, OnChanges {
           data[inp.name] = dd.getHours().toString().padStart(2, "0") +':'+ dd.getMinutes().toString().padStart(2, "0");
         }
       }
+      if (inp.type == 'native-date') {
+        if (this.form[inp.name]) {
+          const dd = new Date(this.form[inp.name]);
+          data[inp.name] = this.datePipe.transform(dd, 'yyyy-MM-dd HH:mm');
+        }
+      }
     });
     this.OnSubmit.emit(data);
   }
@@ -101,15 +109,22 @@ export class DynamicFormPage implements OnInit, OnChanges {
   }
 
   dateChanged(event: any, inputName: any) {
-    console.log(`${inputName} = ${event.target.value}`);
+    console.log(`${inputName} = ${event.target.value}`, event);
     if (event.target.value === undefined) {
-      this.form[inputName] = '';
-      event.target.value = '';
+      this.form[inputName] = null;
     }
     if (this.inputs[inputName] && this.inputs[inputName].changed) {
       this.inputs[inputName]?.changed?.(event);
     }
     // this.form[inputName] = this.datePipe.transform(value, 'YYYY-MM-dd');
+  }
+
+  openNativeDatePicker(inputName: any) {
+    const dateElement = document.getElementById(this.prefix+inputName) as HTMLInputElement;
+    if (dateElement) {
+      dateElement.showPicker();
+      dateElement.click();
+    }
   }
 
   async fileToUrl(file: File | string) {
