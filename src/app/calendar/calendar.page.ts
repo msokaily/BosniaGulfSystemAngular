@@ -172,10 +172,10 @@ export class CalendarPage implements OnInit {
         return {
           customer: reserv.customer,
           id: reserv.id,
-          name: reserv.product.name,
+          name: reserv?.product?.name ?? '-',
           start_at: reserv.start_at,
           end_at: reserv.end_at,
-          image: reserv.product.image,
+          image: reserv?.product?.image ?? null,
           item_id: reserv.item_id
         } as Reservation;
       });
