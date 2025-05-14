@@ -193,6 +193,7 @@ export class OrderFormPage implements OnInit {
         title: await this.shared.trans('airline'),
         value: this.order?.airline || '',
         readonly,
+        style: 'border: 2px solid var(--ion-color-warning)',
         colSize: 4
       },
       {
@@ -202,6 +203,7 @@ export class OrderFormPage implements OnInit {
         value: this.order?.paid || 0,
         readonly: this.user?.role == 'accountant' ? false : readonly,
         colSize: 4,
+        style: 'border: 2px solid var(--ion-color-success)',
         options: [
           {
             id: 1,
