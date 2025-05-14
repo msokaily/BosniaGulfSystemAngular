@@ -306,6 +306,7 @@ export type CustomInput = {
   hourCycle?: 'h12' | 'h23' | 'h11' | 'h24';
   required?: boolean;
   note?: string;
+  style?: string;
   max?: any;
   min?: any;
   dateRangeOptions?: CalendarComponentOptions;

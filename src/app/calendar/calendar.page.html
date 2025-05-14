@@ -22,36 +22,67 @@
 
 <ion-content class="ion-padding">
   <ion-spinner *ngIf="loadingIndicator" class="my-loading-spinner"></ion-spinner>
-  <div class="calendar-container" *ngFor="let month of months" dir="ltr">
-    <h2>{{ month.month }} {{ month.year }}</h2>
-    
-    <!-- Weekdays Header -->
-    <div class="weekdays">
-      <div *ngFor="let d of ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']">{{ d }}</div>
+  <div class="reservation-tooltip" *ngIf="hoveredReservation" [style.left.px]="tooltipX" [style.top.px]="tooltipY"
+    [class.tooltip-left]="tooltipOnLeft" [class.tooltip-top]="tooltipOnTop">
+    <div class="tooltip-header">
+      <img [src]="hoveredReservation.image" alt="{{ hoveredReservation.name }}">
+      <h3>{{ hoveredReservation.name }}</h3>
     </div>
-    
-    <!-- Render each row separately -->
-    <div class="day-rows">
-      <div class="day-row" *ngFor="let row of month.rows" [style.height.px]="row.height">
-        <!-- Render day cells for this row -->
-        <div class="day-box" *ngFor="let day of row.days">
-          <span *ngIf="day.day">{{ day.day }}</span>
-        </div>
-        <!-- Overlay reservation blocks for this row -->
-        <ng-container *ngFor="let res of row.reservations">
-          <div class="reservation-block"
-            [style.top.px]="res.top"
-            [style.left.%]="res.left"
-            [style.width.%]="res.width"
-            [style.background]="res.color"
-            [title]="res.name + ' - ' + res.customer"
-            (click)="edit(res.id)">
-            <img [src]="res.image" alt="{{ res.name }}">
-            <span>{{ res.name }}</span>
-            <span class="ion-padding-horizontal"> - </span>
-            <span>{{ res.customer }}</span>
+    <div class="tooltip-body">
+      <p><strong>Customer:</strong> {{ hoveredReservation.customer }}</p>
+      <p><strong>Dates:</strong> {{ hoveredReservation.start_at | date:'Y-MM-dd' }} → {{ hoveredReservation.end_at |
+        date:'Y-MM-dd' }}</p>
+      <p><strong>Duration:</strong> {{ getDuration(hoveredReservation) }} days</p>
+    </div>
+  </div>
+  <div class="calendar-container">
+    <!-- Months Container -->
+    <div *ngFor="let month of months" class="month-wrapper">
+      <!-- Month Header -->
+      <div class="month-header">
+        <h2>{{ month.month }} {{ month.year }}</h2>
+      </div>
+
+      <!-- Days and Reservations -->
+      <div class="month-content">
+
+        <div class="day-names-row">
+          <div *ngFor="let day of getVisibleDays(month)" class="day-name-cell">
+            {{ getDayName(day?.day ?? 0, month.year, month.monthIndex) }}
           </div>
-        </ng-container>
+        </div>
+
+        <!-- Days Row -->
+        <div class="days-row">
+          <div *ngFor="let day of getVisibleDays(month); let i = index" class="day-cell"
+            [style.border-right]="i < getVisibleDays(month).length - 1 ? '1px solid #e0e0e0' : 'none'">
+            {{ day.day }}
+          </div>
+        </div>
+
+        <!-- Vertical Grid Lines -->
+        <div class="grid-lines">
+          <div *ngFor="let day of getVisibleDays(month); let i = index" class="grid-line" [style.left.px]="i * 45 + 45">
+          </div>
+        </div>
+
+        <!-- Reservations Layer -->
+        <div class="reservations-layer">
+          <div *ngFor="let reservation of getMonthReservations(month)" class="reservation-block"
+            [style.left.px]="calculateLeft(reservation, month)" [style.width.px]="calculateWidth(reservation, month)"
+            [style.top.px]="reservation.stackIndex * 25" [style.background]="reservation.color"
+            (click)="edit(reservation.id)" (mouseenter)="showTooltip(reservation, $event)"
+            (mousemove)="updateTooltipPosition($event)" (mouseleave)="hideTooltip()">
+            <img [src]="reservation.image" alt="{{ reservation.name }}">
+            <span class="reservation-text">
+              {{ reservation.name }}
+              <span class="date-range">
+                ({{ formatDate(reservation.start_at) }} → {{ formatDate(reservation.end_at) }}) {{ reservation.customer
+                }}
+              </span>
+            </span>
+          </div>
+        </div>
       </div>
     </div>
   </div>

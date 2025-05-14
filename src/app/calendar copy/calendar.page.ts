@@ -46,8 +46,7 @@ interface RowData {
 interface MonthData {
   month: string;
   year: number;
-  monthIndex: number;
-  rows: RowData[];
+  rows: RowData[]; // rows of days (each row contains 7 cells)
 }
 
 @Component({
@@ -81,12 +80,6 @@ export class CalendarPage implements OnInit {
   inputs: CustomInput[] = [];
 
   pop!: HTMLIonPopoverElement;
-
-  hoveredReservation: ReservationBlock | null = null;
-  tooltipX = 0;
-  tooltipY = 0;
-  tooltipOnLeft = false;
-  tooltipOnTop = false;
 
   // Grid settings
   readonly columns: number = 7;
@@ -187,7 +180,7 @@ export class CalendarPage implements OnInit {
         } as Reservation;
       });
     }
-    // console.log({ reservations: this.reservations, items: this.items });
+    console.log({ reservations: this.reservations, items: this.items });
 
     await this.generateCalendar();
 
@@ -214,189 +207,183 @@ export class CalendarPage implements OnInit {
     });
   }
 
-  formatDate(dateString: string): string {
-    return this.datePipe.transform(dateString, 'Y-MM-dd') || '';
+  generateMonth(year: number, month: number): MonthData {
+    const firstDayIndex = new Date(year, month, 1).getDay();
+    const totalDays = new Date(year, month + 1, 0).getDate();
+    const days: Day[] = this.generateDaysArray(firstDayIndex, totalDays);
+    const rows: RowData[] = this.splitDaysIntoRows(days);
+    const reservationBlocks: ReservationBlock[] = this.processReservations(year, month, firstDayIndex, totalDays, rows);
+    this.assignReservationBlocksToRows(reservationBlocks, rows);
+
+    return {
+      month: new Date(year, month).toLocaleString('default', { month: 'long' }),
+      year,
+      rows,
+    };
   }
 
-  getDayName(dayNumber: number, year: number, monthIndex: number): string {
-    if (dayNumber === null) return '';
-    const date = new Date(year, monthIndex, dayNumber);
-    return this.datePipe.transform(date, 'EEE') || ''; // Returns 'Mon', 'Tue', etc.
-  }
-
-  getVisibleDays(month: MonthData): Day[] {
-    return month.rows.flatMap(row => row.days).filter(day => day.day !== null);
-  }
-
-  getMonthReservations(month: MonthData): ReservationBlock[] {
-    return month.rows.flatMap(row => row.reservations);
-  }
-
-  // Modified generateMonth to handle cross-month reservations properly
-  private generateMonth(year: number, month: number): MonthData {
-    const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0);
-    const daysInMonth = lastDay.getDate();
-    const firstDayIndex = firstDay.getDay();
-
-    // Create days array
+  private generateDaysArray(firstDayIndex: number, totalDays: number): Day[] {
     const days: Day[] = [];
-    for (let i = 0; i < firstDayIndex; i++) days.push({ day: null });
-    for (let i = 1; i <= daysInMonth; i++) days.push({ day: i });
+    for (let i = 0; i < firstDayIndex; i++) {
+      days.push({ day: null });
+    }
+    for (let i = 1; i <= totalDays; i++) {
+      days.push({ day: i });
+    }
+    return days;
+  }
 
-    // Split into weeks
+  private splitDaysIntoRows(days: Day[]): RowData[] {
     const rows: RowData[] = [];
-    while (days.length > 0) {
-      const weekDays = days.splice(0, 7);
+    const totalRows = Math.ceil(days.length / this.columns);
+    for (let r = 0; r < totalRows; r++) {
+      const rowDays = days.slice(r * this.columns, r * this.columns + this.columns);
       rows.push({
-        days: weekDays,
-        rowNumber: rows.length,
+        days: rowDays,
+        rowNumber: r,
         height: this.baseRowHeight,
-        reservations: []
+        reservations: [],
       });
     }
+    return rows;
+  }
 
-    // Process reservations
+  private processReservations(year: number, month: number, firstDayIndex: number, totalDays: number, rows: RowData[]): ReservationBlock[] {
     const reservationBlocks: ReservationBlock[] = [];
     this.reservations.forEach(res => {
       const startDate = new Date(res.start_at);
       const endDate = new Date(res.end_at);
 
-      // Split reservation into monthly chunks
-      let currentStart = new Date(Math.max(startDate.getTime(), firstDay.getTime()));
-      let currentEnd = new Date(Math.min(endDate.getTime(), lastDay.getTime()));
+      // Check if the reservation starts in the current month
+      if (startDate.getFullYear() === year && startDate.getMonth() === month) {
+        const startDay = startDate.getDate();
+        const endDay = endDate.getMonth() === month ? endDate.getDate() : totalDays; // Handle end date in the same month
+        const totalSpan = endDay - startDay + 1;
 
-      while (currentStart <= currentEnd) {
-        const monthStart = new Date(currentStart.getFullYear(), currentStart.getMonth(), 1);
-        const monthEnd = new Date(currentStart.getFullYear(), currentStart.getMonth() + 1, 0);
+        // Create reservation blocks for the current month
+        this.createReservationBlocks(res, firstDayIndex, startDay, totalSpan, reservationBlocks);
+      }
 
-        const startDay = currentStart.getDate();
-        const endDay = Math.min(currentEnd.getDate(), monthEnd.getDate());
-        const span = endDay - startDay + 1;
-        const cellIndex = firstDayIndex + startDay - 1;
+      // Check if the reservation starts in the previous month and ends in the current month
+      const prevMonth = new Date(year, month - 1, 1);
+      if (
+        startDate.getFullYear() === prevMonth.getFullYear() &&
+        startDate.getMonth() === prevMonth.getMonth() &&
+        endDate.getFullYear() === year &&
+        endDate.getMonth() === month
+      ) {
+        const startDay = 1; // Reservation starts from the first day of the current month
+        const endDay = endDate.getDate();
+        const totalSpan = endDay - startDay + 1;
 
-        if (currentStart.getMonth() === month) {
-          reservationBlocks.push({
-            ...res,
-            cellIndex,
-            span,
-            row: Math.floor(cellIndex / 7),
-            stackIndex: 0, // Set during stacking
-            top: 0,
-            left: 0,
-            width: 0,
-            resId: res.id,
-            color: this.getColorForId(res.item_id)
-          });
+        // Create reservation blocks for the current month
+        this.createReservationBlocks(res, firstDayIndex, startDay, totalSpan, reservationBlocks);
+      }
+    });
+    return reservationBlocks;
+  }
+
+  private createReservationBlocks(res: Reservation, firstDayIndex: number, startDay: number, totalSpan: number, reservationBlocks: ReservationBlock[]) {
+    let cellIndex = firstDayIndex + startDay - 1;
+    let remainingSpan = totalSpan;
+    let currentRow = Math.floor(cellIndex / this.columns);
+    let currentCol = cellIndex % this.columns;
+
+    while (remainingSpan > 0) {
+      const cellsRemainingInRow = this.columns - currentCol;
+      const blockSpan = Math.min(remainingSpan, cellsRemainingInRow);
+      const block: ReservationBlock = {
+        ...res,
+        resId: res.id as number,
+        cellIndex,
+        span: blockSpan,
+        row: currentRow,
+        stackIndex: 0,
+        top: 0,
+        left: 0,
+        width: 0,
+        color: this.getColorForId(res.item_id as number),
+      };
+      reservationBlocks.push(block);
+
+      remainingSpan -= blockSpan;
+      currentRow++;
+      currentCol = 0;
+      cellIndex = currentRow * this.columns;
+    }
+  }
+
+  private assignReservationBlocksToRows(reservationBlocks: ReservationBlock[], rows: RowData[]) {
+    const blocksByRow: { [row: number]: ReservationBlock[] } = {};
+    reservationBlocks.forEach(block => {
+      if (!blocksByRow[block.row]) {
+        blocksByRow[block.row] = [];
+      }
+      blocksByRow[block.row].push(block);
+    });
+  
+    // Track reservations that span multiple rows
+    const crossRowReservations = new Set<number>();
+    reservationBlocks.forEach(block => {
+      if (block.span > (this.columns - (block.cellIndex % this.columns))) {
+        crossRowReservations.add(block.resId);
+      }
+    });
+  
+    Object.keys(blocksByRow).forEach(rowKey => {
+      const rowNumber = Number(rowKey);
+      const blocks = blocksByRow[rowNumber];
+  
+      // Sort blocks:
+      // 1. Cross-row reservations first (lower stackIndex)
+      // 2. Then by reservation ID and column
+      blocks.sort((a, b) => {
+        const isACrossRow = crossRowReservations.has(a.resId);
+        const isBCrossRow = crossRowReservations.has(b.resId);
+  
+        if (isACrossRow && !isBCrossRow) return -1; // a comes first
+        if (!isACrossRow && isBCrossRow) return 1;  // b comes first
+  
+        // If both are cross-row or neither, sort by resId and column
+        if (a.resId !== b.resId) {
+          return a.resId - b.resId;
         }
-
-        // Move to next month chunk
-        currentStart = new Date(currentStart.getFullYear(), currentStart.getMonth() + 1, 1);
-        currentEnd = new Date(Math.min(endDate.getTime(), new Date(currentStart.getFullYear(), currentStart.getMonth() + 1, 0).getTime()));
-      }
-    });
-
-    // Improved stacking algorithm
-    this.stackReservations(reservationBlocks);
-
-    // Assign to rows and calculate heights
-    rows.forEach(row => {
-      row.reservations = reservationBlocks.filter(res => res.row === row.rowNumber);
-      const maxStack = row.reservations.reduce((max, res) => Math.max(max, res.stackIndex), 0);
-      row.height = this.baseRowHeight + (maxStack + 1) * 25;
-    });
-
-    return {
-      month: firstDay.toLocaleString('default', { month: 'long' }),
-      monthIndex: month,
-      year,
-      rows
-    };
-  }
-
-  // Improved stacking logic using interval partitioning
-  private stackReservations(reservations: ReservationBlock[]) {
-    // Sort reservations by start cell and span
-    reservations.sort((a, b) => a.cellIndex - b.cellIndex || b.span - a.span);
-
-    const lanes: ReservationBlock[][] = [];
-
-    reservations.forEach(res => {
-      let laneFound = false;
-
-      // Try to find a lane where this reservation doesn't overlap
-      for (let i = 0; i < lanes.length; i++) {
-        const lastInLane = lanes[i][lanes[i].length - 1];
-        if (lastInLane.cellIndex + lastInLane.span <= res.cellIndex) {
-          lanes[i].push(res);
-          res.stackIndex = i;
-          laneFound = true;
-          break;
+        const colA = (a.cellIndex % this.columns);
+        const colB = (b.cellIndex % this.columns);
+        return colA - colB;
+      });
+  
+      // Assign stack indices
+      let currentStackIndex = -1;
+      let lastResId: number | null = null;
+      blocks.forEach(block => {
+        if (lastResId === block.resId) {
+          block.stackIndex = currentStackIndex;
+        } else {
+          currentStackIndex++;
+          block.stackIndex = currentStackIndex;
+          lastResId = block.resId;
         }
-      }
-
-      // If no lane found, create new one
-      if (!laneFound) {
-        res.stackIndex = lanes.length;
-        lanes.push([res]);
-      }
+      });
+  
+      // Update row height based on the maximum stack index
+      const extraHeight = (Math.max(...blocks.map(b => b.stackIndex)) + 1) * (this.reservationHeight + this.reservationVerticalGap);
+      rows[rowNumber].height = this.baseRowHeight + extraHeight;
+      rows[rowNumber].reservations = blocks;
     });
-  }
-
-  // Updated positioning calculations
-  calculateLeft(reservation: ReservationBlock, month: MonthData): number {
-    const firstVisibleIndex = month.rows[0].days.findIndex(d => d.day !== null);
-    const dayWidth = 45;
-    return (reservation.cellIndex - firstVisibleIndex) * dayWidth;
-  }
-
-  calculateWidth(reservation: ReservationBlock, month: MonthData): number {
-    const dayWidth = 45;
-    return reservation.span * dayWidth;
-  }
-
-  showTooltip(reservation: ReservationBlock, event: MouseEvent) {
-    this.hoveredReservation = reservation;
-    this.updateTooltipPosition(event);
-  }
-
-  updateTooltipPosition(event: MouseEvent) {
-    const mouseX = event.clientX;
-    const mouseY = event.clientY;
-    const tooltipWidth = 300;
-    const tooltipHeight = 150;
-    const windowWidth = window.innerWidth;
-    const windowHeight = window.innerHeight;
-
-    // Calculate available space
-    const spaceRight = windowWidth - mouseX - 20;
-    const spaceLeft = mouseX - 20;
-    const spaceBelow = windowHeight - mouseY - 20;
-    const spaceAbove = mouseY - 20;
-
-    // Determine position
-    this.tooltipOnLeft = spaceRight < tooltipWidth && spaceLeft > spaceRight;
-    this.tooltipOnTop = spaceBelow < tooltipHeight && spaceAbove > spaceBelow;
-
-    // Set position
-    this.tooltipX = mouseX - 280;
-    this.tooltipY = mouseY;
-  }
-
-  hideTooltip() {
-    this.hoveredReservation = null;
-  }
-
-  getDuration(reservation: ReservationBlock): number {
-    const start = new Date(reservation.start_at);
-    const end = new Date(reservation.end_at);
-    const diff = end.getTime() - start.getTime();
-    return Math.ceil(diff / (1000 * 3600 * 24)) + 1;
+  
+    // Update each reservation block with final computed top, left, and width
+    reservationBlocks.forEach(block => {
+      const col = block.cellIndex % this.columns;
+      block.left = (col / this.columns) * 100;
+      block.width = (block.span / this.columns) * 100;
+      block.top = block.stackIndex * (this.reservationHeight + this.reservationVerticalGap);
+    });
   }
 
   async edit(id: number, data?: any, errors?: any) {
     const index = this.items.findIndex(v => v?.id == id);
-    if (this.user?.id === this.items[index]?.user_id || ['admin'].includes(this.user?.role)) { } else { return; };
+    if (this.user?.id === this.items[index]?.user_id || ['admin'].includes(this.user?.role)) {} else { return; };
     let products = [];
     const productType = this.items[index]?.type;
     if (productType == 'accommodation') {
@@ -559,9 +546,9 @@ export class CalendarPage implements OnInit {
         title: await this.shared.trans('type'),
         value: this.filterValues?.productType || null,
         options: [
-          { id: 'accommodation', name: await this.shared.trans('accommodation') },
-          { id: 'car', name: await this.shared.trans('car') },
-          { id: 'driver', name: await this.shared.trans('driver') }
+          {id: 'accommodation', name: await this.shared.trans('accommodation')},
+          {id: 'car', name: await this.shared.trans('car')},
+          {id: 'driver', name: await this.shared.trans('driver')}
         ],
         multiple: true,
       },

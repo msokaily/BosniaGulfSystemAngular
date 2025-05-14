@@ -50,6 +50,10 @@ export class OrderFormPage implements OnInit {
     return (this.isEdit && (this.user?.id === this.order?.user_id || ['admin'].includes(this.user?.role))) || !this.isEdit;
   }
 
+  get isAdmin() {
+    return ['admin'].includes(this.user?.role) ?? false;
+  }
+
   get paymentsSum() {
     return {
       'EUR': this.order?.payments?.filter((v: any) => v?.currency == 'EUR' && v?.type != 'deposit')?.reduce((prev: number, curr: any) => { return prev + parseFloat(curr?.amount) }, 0) || 0,
@@ -77,6 +81,7 @@ export class OrderFormPage implements OnInit {
     this.orderStatus = (await this.api.constants())?.order_status;
 
     this.extraServices = (await this.api.extraServices()) ?? [];
+    const agents = (await this.api.users({role: ['reserver', 'admin']})) ?? [];
 
     loading.dismiss();
 
@@ -104,7 +109,8 @@ export class OrderFormPage implements OnInit {
         value: this.order?.name || '',
         required: true,
         readonly,
-        colSize: 3
+        style: 'border: 2px solid var(--ion-color-primary)',
+        colSize: 4
       },
       {
         name: 'phone',
@@ -113,7 +119,18 @@ export class OrderFormPage implements OnInit {
         value: this.order?.phone || '',
         required: false,
         readonly,
-        colSize: 2.5
+        style: 'border: 2px solid var(--ion-color-secondary)',
+        colSize: 4
+      },
+      {
+        name: 'user_id',
+        type: 'select',
+        title: await this.shared.trans('reserver'),
+        value: this.order?.user_id || '',
+        options: agents.map((v: any) => { return { id: v?.id, name: v?.name }; }),
+        readonly: !this.isAdmin,
+        style: 'border: 2px solid var(--ion-color-dark)',
+        colSize: 4
       },
       {
         name: 'status',
@@ -122,7 +139,8 @@ export class OrderFormPage implements OnInit {
         value: this.order?.status >= 0 ? parseInt(this.order?.status) : 0,
         options: this.orderStatus.map((v, i) => { return { id: i, name: v[this.shared.lang] }; }),
         readonly,
-        colSize: 2.5
+        style: 'border: 2px solid var(--ion-color-danger)',
+        colSize: 4
       },
       {
         name: 'extra_services',
@@ -132,6 +150,7 @@ export class OrderFormPage implements OnInit {
         options: this.extraServices.map((v) => { return { id: v.id, name: `${v.name} (${v.price} ${this.shared.currency})` }; }),
         multiple: true,
         readonly,
+        style: 'border: 2px solid var(--ion-color-medium)',
         colSize: 4
       },
       {
@@ -143,7 +162,8 @@ export class OrderFormPage implements OnInit {
         required: false,
         min: min_date,
         readonly,
-        colSize: 2.4
+        style: 'border: 2px solid var(--ion-color-tertiary)',
+        colSize: 4
       },
       {
         name: 'arrive_time',
@@ -154,7 +174,8 @@ export class OrderFormPage implements OnInit {
         hourCycle: 'h24',
         required: false,
         readonly,
-        colSize: 2.4
+        style: 'border: 2px solid var(--ion-color-tertiary)',
+        colSize: 4
       },
       {
         name: 'leave_at',
@@ -163,7 +184,8 @@ export class OrderFormPage implements OnInit {
         title: await this.shared.trans('leave_at'),
         value: this.order?.leave_at || '',
         readonly,
-        colSize: 2.4
+        style: 'border: 2px solid var(--ion-color-tertiary)',
+        colSize: 4
       },
       {
         name: 'airline',
@@ -171,7 +193,7 @@ export class OrderFormPage implements OnInit {
         title: await this.shared.trans('airline'),
         value: this.order?.airline || '',
         readonly,
-        colSize: 2.4
+        colSize: 4
       },
       {
         name: 'paid',
@@ -179,7 +201,7 @@ export class OrderFormPage implements OnInit {
         title: await this.shared.trans('paid'),
         value: this.order?.paid || 0,
         readonly: this.user?.role == 'accountant' ? false : readonly,
-        colSize: 2.4,
+        colSize: 4,
         options: [
           {
             id: 1,
